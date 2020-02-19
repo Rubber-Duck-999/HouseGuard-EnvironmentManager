@@ -14,12 +14,11 @@ pipeline {
                     go version
                     go get -v github.com/streadway/amqp
                     go get -v github.com/sirupsen/logrus
-                    go get -v github.com/scorredoira/email
                     go get -v gopkg.in/yaml.v2
                     go get -v github.com/akamensky/argparse
                     go get -v github.com/clarketm/json
                     pwd
-                    go install github.com/Rubber-Duck-999/exeFaultHandler
+                    go install github.com/Rubber-Duck-999/exeEnvironmentManager
                     go get -u -v github.com/golang/lint/golint
                 '''
             }
@@ -27,13 +26,13 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'echo "Test"'
-                sh './buildFaultHandler.sh'
+                sh './buildEnvironmentManager.sh'
             }
         }
     }
     post {
         failure {
-            emailext body: 'Failed to build FH', subject: 'Build Failure', to: '$DEFAULT_RECIPIENTS'
+            emailext body: 'Failed to build EVM', subject: 'Build Failure', to: '$DEFAULT_RECIPIENTS'
         }
     }
 }
