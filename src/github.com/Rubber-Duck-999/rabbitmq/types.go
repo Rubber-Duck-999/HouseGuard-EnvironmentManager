@@ -40,18 +40,13 @@ type MapMessage struct {
 	valid       bool
 }
 
-const FAILURE string = "Failure.*"
-const FAILURENETWORK string = "Failure.Network"     //Level 4
-const FAILUREDATABASE string = "Failure.Database"   //Level 4
 const FAILURECOMPONENT string = "Failure.Component" //Level 2 if NAC 3
-const FAILUREACCESS string = "Failure.Access"       //Level 5
-const FAILURECAMERA string = "Failure.Camera"
 const MOTIONDETECTED string = "Motion.Detected" //Level 5
 
 const ISSUENOTICE string = "Issue.Notice"
 const MONITORSTATE string = "Monitor.State"
 const REQUESTPOWER string = "Request.Power"
-const EVENTFH string = "Event.FH"
+const EVENTEVM string = "Event.EVM"
 const EXCHANGENAME string = "topics"
 const EXCHANGETYPE string = "topic"
 const TIMEFORMAT string = "20060102150405"
