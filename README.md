@@ -8,7 +8,7 @@ Its main role is to monitor the sensors in the property and report if it can det
 This 'will' be used on Linux OS
 
 ```bash
-N/A
+ ./buildEnvironmentManager.sh
 ```
 
 
