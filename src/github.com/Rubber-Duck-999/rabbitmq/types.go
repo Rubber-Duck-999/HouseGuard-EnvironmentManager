@@ -10,25 +10,9 @@ type MotionDetected struct {
 	Time string
 }
 
-type IssueNotice struct {
-	Severity  int `json:"severity"`
-	Component string `json:"component"`
-	Action    string `json:"action"`
-}
-
-type MonitorState struct {
-	State bool
-}
-
-type RequestPower struct {
-	Power     string `json:"power"`
-	Severity  int    `json:"severity"`
-	Component string `json:"component"`
-}
-
-type EventFH struct {
+type EventEVM struct {
 	Component    string
-	Error_string string
+	Message      string
 	Time         string
 	Severity     int
 }
@@ -40,12 +24,11 @@ type MapMessage struct {
 	valid       bool
 }
 
-const FAILURECOMPONENT string = "Failure.Component" //Level 2 if NAC 3
-const MOTIONDETECTED string = "Motion.Detected" //Level 5
-
+const WEATHER string = "Weather"
+const FAILURECOMPONENT string = "Failure.Component"
+const MOTIONDETECTED string = "Motion.Detected"
+const MOTIONRESPONSE string = "Motion.Response"
 const ISSUENOTICE string = "Issue.Notice"
-const MONITORSTATE string = "Monitor.State"
-const REQUESTPOWER string = "Request.Power"
 const EVENTEVM string = "Event.EVM"
 const EXCHANGENAME string = "topics"
 const EXCHANGETYPE string = "topic"

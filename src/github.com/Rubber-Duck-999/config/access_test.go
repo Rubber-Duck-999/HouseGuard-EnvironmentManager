@@ -33,8 +33,9 @@ func TestFolderInvalid(t *testing.T) {
 	}
 }
 
+/*
 func TestConfigGetNull(t *testing.T) {
-	var file string = `config.yml-sample`
+	var file string = `config.ymlsample`
 	var data ConfigTypes
 	GetData(&data, file)
 	if data.Settings.Key == "" {
@@ -57,10 +58,10 @@ func TestConfigGetAll(t *testing.T) {
 	if data.Settings.Api_Key != "" {
 		t.Error("Failure")
 	}
-}
+}*/
 
 func TestConfigFail(t *testing.T) {
-	var file string = `config.ymlsample`
+	var file string = `config.yml-fail`
 	var data ConfigTypes
 	if GetData(&data, file) == true {
 		t.Error("Failure")

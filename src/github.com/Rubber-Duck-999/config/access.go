@@ -15,11 +15,10 @@ func Exists(name string) bool {
 	gopath := os.Getenv("GOPATH")
 	if gopath != "" {
 		fileCheck := gopath + "/" + name
-		log.Debug("We have been asked to check if this exists: ", fileCheck)
 		file, err := os.Stat(fileCheck)
 		if err == nil {
 			if os.IsNotExist(err) {
-				log.Warn("File doesn't exist")
+				log.Warn("File doesn't exist: ", file)
 			} else {
 				isFile := checkType(file)
 				log.Debug(fileCheck)

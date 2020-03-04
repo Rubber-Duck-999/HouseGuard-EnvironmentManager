@@ -63,10 +63,8 @@ func Subscribe() {
 	log.Warn("Rabbitmq error:", init_err)
 	if init_err == nil {
 		var topics = [4]string{
-			FAILURE,
-			MOTIONDETECTED,
-			ISSUENOTICE,
-			MONITORSTATE,
+			WEATHER,
+			MOTIONRESPONSE,
 		}
 
 		err := ch.ExchangeDeclare(
@@ -133,54 +131,54 @@ func Subscribe() {
 	}
 }
 
-func PublishRequestPower(this_power string, this_severity int, this_component string) string {
-	failure := ""
-	requestPower, err := json.Marshal(&RequestPower{
+func PublishFailureComponent(this_power string, this_severity int, this_component string) string {
+	failure := ""/*
+	failureComponent, err := json.Marshal(&FailureMessage{
 		Power:     this_power,
 		Severity:  this_severity,
 		Component: this_component})
 	failOnError(err, "Failed to convert RequestPower")
-	log.Debug(string(requestPower))
+	log.Debug(string(failureComponent))
 
 	if err == nil {
 		err = ch.Publish(
 			EXCHANGENAME, // exchange
-			REQUESTPOWER, // routing key
+			FAILURECOMPONENT, // routing key
 			false,        // mandatory
 			false,        // immediate
 			amqp.Publishing{
 				ContentType: "application/json",
-				Body:        []byte(requestPower),
+				Body:        []byte(failureComponent),
 			})
 		if err != nil {
 			failOnError(err, "Failed to publish RequestPower topic")
-			failure = FAILUREPUBLISH
+			failure = FAILURECOMPONENT
 		}
-	}
+	}*/
 	return failure
 }
 
-func PublishEventFH(component string, error_string string, time string, severity int) string {
+func PublishEventEVM(component string, message string, time string, severity int) string {
 	failure := ""
 
-	eventFH, err := json.Marshal(&EventFH{
+	eventEVM, err := json.Marshal(&EventEVM{
 		Component:    component,
-		Error_string: error_string,
+		Message:	  message,
 		Time:         time,
 		Severity:     severity})
 	if err != nil {
-		failure = "Failed to convert EventFH"
+		failure = "Failed to convert EventEVM"
 	} else {
 		if init_err == nil {
-			log.Debug(string(eventFH))
+			log.Debug(string(eventEVM))
 			err = ch.Publish(
 				EXCHANGENAME, // exchange
-				EVENTFH,      // routing key
+				EVENTEVM,      // routing key
 				false,        // mandatory
 				false,        // immediate
 				amqp.Publishing{
 					ContentType: "application/json",
-					Body:        []byte(eventFH),
+					Body:        []byte(eventEVM),
 				})
 			if err != nil {
 				log.Fatal(err)

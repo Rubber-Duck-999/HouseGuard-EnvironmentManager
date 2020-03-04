@@ -21,6 +21,7 @@ func TestPublishFailRabbit(t *testing.T) {
 	}
 }
 
+/*
 func TestLogicNetwork(t *testing.T) {
 	value := "{ 'time': 12:00:34, 'type': 'Camera', 'severity': 3 }"
 	messages(FAILURENETWORK, value)
@@ -67,3 +68,4 @@ func TestLogicRequestPower(t *testing.T) {
 		t.Error("Failure")
 	}
 }
+*/
