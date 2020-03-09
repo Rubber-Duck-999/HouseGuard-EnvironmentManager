@@ -1,4 +1,4 @@
-package rabbitmq
+package main
 
 import (
 	"time"
@@ -132,29 +132,29 @@ func Subscribe() {
 }
 
 func PublishFailureComponent(this_power string, this_severity int, this_component string) string {
-	failure := ""/*
-	failureComponent, err := json.Marshal(&FailureMessage{
-		Power:     this_power,
-		Severity:  this_severity,
-		Component: this_component})
-	failOnError(err, "Failed to convert RequestPower")
-	log.Debug(string(failureComponent))
+	failure := "" /*
+		failureComponent, err := json.Marshal(&FailureMessage{
+			Power:     this_power,
+			Severity:  this_severity,
+			Component: this_component})
+		failOnError(err, "Failed to convert RequestPower")
+		log.Debug(string(failureComponent))
 
-	if err == nil {
-		err = ch.Publish(
-			EXCHANGENAME, // exchange
-			FAILURECOMPONENT, // routing key
-			false,        // mandatory
-			false,        // immediate
-			amqp.Publishing{
-				ContentType: "application/json",
-				Body:        []byte(failureComponent),
-			})
-		if err != nil {
-			failOnError(err, "Failed to publish RequestPower topic")
-			failure = FAILURECOMPONENT
-		}
-	}*/
+		if err == nil {
+			err = ch.Publish(
+				EXCHANGENAME, // exchange
+				FAILURECOMPONENT, // routing key
+				false,        // mandatory
+				false,        // immediate
+				amqp.Publishing{
+					ContentType: "application/json",
+					Body:        []byte(failureComponent),
+				})
+			if err != nil {
+				failOnError(err, "Failed to publish RequestPower topic")
+				failure = FAILURECOMPONENT
+			}
+		}*/
 	return failure
 }
 
@@ -162,10 +162,10 @@ func PublishEventEVM(component string, message string, time string, severity int
 	failure := ""
 
 	eventEVM, err := json.Marshal(&EventEVM{
-		Component:    component,
-		Message:	  message,
-		Time:         time,
-		Severity:     severity})
+		Component: component,
+		Message:   message,
+		Time:      time,
+		Severity:  severity})
 	if err != nil {
 		failure = "Failed to convert EventEVM"
 	} else {
@@ -173,7 +173,7 @@ func PublishEventEVM(component string, message string, time string, severity int
 			log.Debug(string(eventEVM))
 			err = ch.Publish(
 				EXCHANGENAME, // exchange
-				EVENTEVM,      // routing key
+				EVENTEVM,     // routing key
 				false,        // mandatory
 				false,        // immediate
 				amqp.Publishing{

@@ -1,4 +1,4 @@
-package rabbitmq
+package main
 
 import (
 	//"encoding/json"
@@ -32,7 +32,7 @@ func checkState() {
 
 			default:
 				log.Warn("We were not expecting this message unvalidating: ",
-				SubscribedMessagesMap[message_id].routing_key)
+					SubscribedMessagesMap[message_id].routing_key)
 				SubscribedMessagesMap[message_id].valid = false
 			}
 		}

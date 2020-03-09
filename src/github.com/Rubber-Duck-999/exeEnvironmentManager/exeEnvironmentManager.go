@@ -3,11 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/Rubber-Duck-999/config"
 	"github.com/akamensky/argparse"
 	log "github.com/sirupsen/logrus"
-
-	"github.com/Rubber-Duck-999/rabbitmq"
 )
 
 func main() {
@@ -26,9 +23,9 @@ func main() {
 	}
 
 	file := *f
-	var data config.ConfigTypes
-	if config.Exists(file) {
-		config.GetData(&data, file)
+	var data ConfigTypes
+	if Exists(file) {
+		GetData(&data, file)
 	} else {
 		log.Error("File doesn't exist")
 		os.Exit(2)
@@ -36,5 +33,5 @@ func main() {
 	log.Trace(data.Settings.Key)
 	//rabbitmq.SetSettings(data.Settings.Key,
 	//	data.Settings.Api_Key)
-	rabbitmq.Subscribe()
+	Subscribe()
 }

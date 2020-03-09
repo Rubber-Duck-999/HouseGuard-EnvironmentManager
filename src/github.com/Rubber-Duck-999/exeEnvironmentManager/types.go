@@ -1,4 +1,4 @@
-package rabbitmq
+package main
 
 type FailureMessage struct {
 	Time         string `json:"time"`
@@ -10,11 +10,18 @@ type MotionDetected struct {
 	Time string
 }
 
+type ConfigTypes struct {
+	Settings struct {
+		Key     string `yaml:"key"`
+		Api_Key string `yaml:"Api_Key"`
+	} `yaml:"settings"`
+}
+
 type EventEVM struct {
-	Component    string
-	Message      string
-	Time         string
-	Severity     int
+	Component string
+	Message   string
+	Time      string
+	Severity  int
 }
 
 type MapMessage struct {
