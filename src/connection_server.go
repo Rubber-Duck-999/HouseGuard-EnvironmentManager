@@ -1,49 +1,54 @@
 package main
 
 import (
-	"crypto/tls"
+	"bufio"
 	"fmt"
-	"io"
-	"log"
+	"math/rand"
 	"net"
 	"os"
 )
 
-const serverKey = `-----BEGIN EC PARAMETERS-----
-BggqhkjOPQMBBw==
------END EC PARAMETERS-----
------BEGIN EC PRIVATE KEY-----
-MHcCAQEEIHg+g2unjA5BkDtXSN9ShN7kbPlbCcqcYdDu+QeV8XWuoAoGCCqGSM49
-AwEHoUQDQgAEcZpodWh3SEs5Hh3rrEiu1LZOYSaNIWO34MgRxvqwz1FMpLxNlx0G
-cSqrxhPubawptX5MSr02ft32kfOlYbaF5Q==
------END EC PRIVATE KEY-----
-`
+const MIN = 1
+const MAX = 100
 
-//const serverCert = 
+func random() int {
+	return rand.Intn(MAX-MIN) + MIN
+}
 
-func CheckServer() {
-	serverCert := "--"
-	cer, err := tls.X509KeyPair([]byte(serverCert), []byte(serverKey))
-	if err != nil {
-		log.Fatal(err)
+func handleConnection(c net.Conn) {
+	fmt.Printf("Serving %s\n", c.RemoteAddr().String())
+	for {
+		_, err := bufio.NewReader(c).ReadString('\n')
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	}
-	config := &tls.Config{Certificates: []tls.Certificate{cer}}
+	c.Close()
+}
 
-	l, err := tls.Listen("tcp", ":8089", config)
+func main() {
+	arguments := os.Args
+	if len(arguments) == 1 {
+		fmt.Println("Please provide a port number!")
+		return
+	}
+
+	PORT := ":" + arguments[1]
+	l, err := net.Listen("tcp4", PORT)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return
 	}
 	defer l.Close()
+	//rand.Seed(time.Now().Unix())
 
 	for {
-		conn, err := l.Accept()
+		c, err := l.Accept()
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
-		go func(c net.Conn) {
-			io.Copy(os.Stdout, c)
-			fmt.Println()
-			c.Close()
-		}(conn)
+		go handleConnection(c)
 	}
 }
