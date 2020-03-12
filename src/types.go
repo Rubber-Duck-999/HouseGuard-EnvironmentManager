@@ -1,5 +1,16 @@
 package main
 
+type WeatherResponse struct {
+	Coord coordinates `json:"coord"`
+	Weather weather   `json:"weather"`
+	Base string       `json:base"`
+	Main main         `json:main`
+	Visibility int    `json:visibility`
+	Wind wind         `json:wind`
+	Clouds clouds     `json:clouds`
+	dt int64          `json`
+}
+
 type FailureMessage struct {
 	Time         string `json:"time"`
 	Failure_type string `json:"type"`
