@@ -1,4 +1,4 @@
-package connection
+package main
 
 import (
 	"bufio"
@@ -27,7 +27,7 @@ func handleConnection(c net.Conn) {
 	c.Close()
 }
 
-func main() {
+func Connection() {
 	arguments := os.Args
 	if len(arguments) == 1 {
 		fmt.Println("Please provide a port number!")

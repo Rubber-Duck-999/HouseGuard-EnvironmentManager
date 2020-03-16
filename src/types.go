@@ -1,14 +1,58 @@
 package main
 
+type coordinates struct {
+	Lon float64 `json:"lon"`
+	Lat float64 `json:"lat"`
+}
+
+type weather []struct {
+	Id int             `json:"id"`
+	Main string        `json:"main"`
+	Description string `json:"description"`
+	Icon string        `json:"icon"`
+}
+
+type mainWeather struct {
+	Temp     int `json:"temp"`
+	Like     int `json:"feels_like"`
+	Min      int `json:"temp_min"`
+	Max      int `json:"temp_max"`
+	Pressure int `json:"pressure"`
+	Humidity int `json:"humidity"`
+}
+
+type wind struct {
+	Speed int `json:"speed"`
+	Deg int   `json:"deg"`
+}
+
+type cloud struct {
+	All int `json:"all"`
+}
+
+type system struct {
+	Type    int `json:"type"`
+	Id      int `json:"id"`
+	Message float32 `json:"message"`
+	Country string  `json:"country"`
+	Sunrise int64   `json:"sunrise"`
+	Sunset  int64   `json:"sunset"`
+}
+
 type WeatherResponse struct {
 	Coord coordinates `json:"coord"`
 	Weather weather   `json:"weather"`
-	Base string       `json:base"`
-	Main main         `json:main`
-	Visibility int    `json:visibility`
-	Wind wind         `json:wind`
-	Clouds clouds     `json:clouds`
-	dt int64          `json`
+	Base string       `json:"base"`
+	Main mainWeather  `json:"main"`
+	Visibility int    `json:"visibility"`
+	Wind wind         `json:"wind"`
+	Clouds cloud      `json:"clouds"`
+	DT int64          `json:"dt"`
+	Sys system        `json:"sys"`
+	Timezone int64    `json:"timezone"`
+	ID int64          `json:"id"`
+	Name string       `json:"name"`
+	Cod int           `json:"cod"`
 }
 
 type FailureMessage struct {
