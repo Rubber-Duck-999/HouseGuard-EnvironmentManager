@@ -3,17 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math/rand"
 	"net"
 	"os"
 )
-
-const MIN = 1
-const MAX = 100
-
-func random() int {
-	return rand.Intn(MAX-MIN) + MIN
-}
 
 func handleConnection(c net.Conn) {
 	fmt.Printf("Serving %s\n", c.RemoteAddr().String())

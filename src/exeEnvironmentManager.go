@@ -31,7 +31,6 @@ func main() {
 		os.Exit(2)
 	}
 	log.Trace(data.Settings.Key)
-	//rabbitmq.SetSettings(data.Settings.Key,
-	//	data.Settings.Api_Key)
+	SetKeys(data.Settings.Key)
 	Subscribe()
 }

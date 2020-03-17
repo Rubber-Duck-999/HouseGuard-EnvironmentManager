@@ -62,7 +62,7 @@ func Subscribe() {
 	log.Trace("Beginning rabbitmq initialisation")
 	log.Warn("Rabbitmq error:", init_err)
 	if init_err == nil {
-		var topics = [4]string{
+		var topics = [2]string{
 			WEATHER,
 			MOTIONRESPONSE,
 		}
