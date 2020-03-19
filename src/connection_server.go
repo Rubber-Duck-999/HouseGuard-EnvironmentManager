@@ -2,45 +2,38 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"net"
-	"os"
+    "strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
-func handleConnection(c net.Conn) {
-	fmt.Printf("Serving %s\n", c.RemoteAddr().String())
-	for {
-		_, err := bufio.NewReader(c).ReadString('\n')
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	}
-	c.Close()
-}
-
-func Connection() {
-	arguments := os.Args
-	if len(arguments) == 1 {
-		fmt.Println("Please provide a port number!")
-		return
-	}
-
-	PORT := ":" + arguments[1]
+func HandleConnection() {
+	PORT := ":9001"
 	l, err := net.Listen("tcp4", PORT)
 	if err != nil {
-		fmt.Println(err)
-		return
+			log.Debug("Listen error: ", err)
+			return
 	}
 	defer l.Close()
-	//rand.Seed(time.Now().Unix())
 
 	for {
 		c, err := l.Accept()
 		if err != nil {
-			fmt.Println(err)
+			log.Debug("Accept error: ", err)
 			return
 		}
-		go handleConnection(c)
+		log.Trace("Serving \n", c.RemoteAddr().String())
+		for {
+			netData, err := bufio.NewReader(c).ReadString('\n')
+			if err != nil {
+				log.Error(err)
+				return
+			}
+	
+			temp := strings.TrimSpace(string(netData))
+			log.Debug("Received : ", temp)
+		}
+		c.Close()
 	}
 }

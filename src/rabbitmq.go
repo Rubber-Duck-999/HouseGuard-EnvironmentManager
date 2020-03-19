@@ -121,40 +121,41 @@ func Subscribe() {
 				messages(d.RoutingKey, s)
 				log.Debug("Checking states of received messages")
 				checkState()
-			}
+        	}
 			//This function is checked after to see if multiple errors occur then to
 			//through an event message
 		}()
+
+		go HandleConnection()
 
 		log.Trace(" [*] Waiting for logs. To exit press CTRL+C")
 		<-forever
 	}
 }
 
-func PublishFailureComponent(this_power string, this_severity int, this_component string) string {
-	failure := "" /*
-		failureComponent, err := json.Marshal(&FailureMessage{
-			Power:     this_power,
-			Severity:  this_severity,
-			Component: this_component})
-		failOnError(err, "Failed to convert RequestPower")
-		log.Debug(string(failureComponent))
+func PublishFailureComponent(this_time string, this_severity int) string {
+	failure := ""
+	failureComponent, err := json.Marshal(&FailureMessage{
+		Time:     this_time,
+		Severity: this_severity})
+	failOnError(err, "Failed to convert FailureMessage")
+	log.Debug(string(failureComponent))
 
-		if err == nil {
-			err = ch.Publish(
-				EXCHANGENAME, // exchange
-				FAILURECOMPONENT, // routing key
-				false,        // mandatory
-				false,        // immediate
-				amqp.Publishing{
-					ContentType: "application/json",
-					Body:        []byte(failureComponent),
-				})
-			if err != nil {
-				failOnError(err, "Failed to publish RequestPower topic")
-				failure = FAILURECOMPONENT
-			}
-		}*/
+	if err == nil {
+		err = ch.Publish(
+			EXCHANGENAME, // exchange
+			FAILURECOMPONENT, // routing key
+			false,        // mandatory
+			false,        // immediate
+			amqp.Publishing{
+				ContentType: "application/json",
+				Body:        []byte(failureComponent),
+			})
+		if err != nil {
+			failOnError(err, "Failed to publish RequestPower topic")
+			failure = FAILURECOMPONENT
+		}
+	}
 	return failure
 }
 

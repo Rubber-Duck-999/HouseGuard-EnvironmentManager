@@ -32,10 +32,10 @@ queue_name = result.method.queue
 channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_weather)
 channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_motion)
 #
-text = '{ "severity": 0, "component": "EVM", "action": null }'
-failure = '{ "time":"14:56:00", "type": "sensor", "severity": 1 }'
-channel.basic_publish(exchange='topics', routing_key=key_event, body=text)
-channel.basic_publish(exchange='topics', routing_key=key_failure, body=failure)
+text = '{ "city": "London", "lat": 50.0, "lon": 3 }'
+motion = '{ "severity": 5 }'
+channel.basic_publish(exchange='topics', routing_key=key_weather, body=text)
+channel.basic_publish(exchange='topics', routing_key=key_motion, body=motion)
 #
 print("Waiting for Messages")
 count = 0

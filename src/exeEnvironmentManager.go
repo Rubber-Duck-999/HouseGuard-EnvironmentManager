@@ -30,7 +30,7 @@ func main() {
 		log.Error("File doesn't exist")
 		os.Exit(2)
 	}
-	log.Trace(data.Settings.Key)
+	log.Trace(data)
 	SetKeys(data.Settings.Key)
 	Subscribe()
 }

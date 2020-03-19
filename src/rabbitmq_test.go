@@ -3,23 +3,9 @@
 package main
 
 import (
-	"strings"
-	"testing"
+	//"strings"
+	//"testing"
 )
-
-// Check that State is set
-// then run this test will prove it is set
-func TestPublishFailRabbit(t *testing.T) {
-	failure := "cheese"
-	failure = messageFailure(true)
-	if failure != "" {
-		if strings.Contains(FAILUREPUBLISH, failure) {
-			t.Error("Failure")
-		} else if strings.Contains(FAILURECONVERT, failure) {
-			t.Error("Failure")
-		}
-	}
-}
 
 /*
 func TestLogicNetwork(t *testing.T) {

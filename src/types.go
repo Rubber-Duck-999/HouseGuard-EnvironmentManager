@@ -57,8 +57,11 @@ type WeatherResponse struct {
 
 type FailureMessage struct {
 	Time         string `json:"time"`
-	Failure_type string `json:"type"`
 	Severity     int    `json:"severity"`
+}
+
+type MotionResponse struct {
+	Severity int `json:"severity"`
 }
 
 type MotionDetected struct {
@@ -67,7 +70,7 @@ type MotionDetected struct {
 
 type ConfigTypes struct {
 	Settings struct {
-		Key     string `yaml:"key"`
+		Key     string `yaml:"Key"`
 	} `yaml:"settings"`
 }
 
@@ -76,6 +79,12 @@ type EventEVM struct {
 	Message   string
 	Time      string
 	Severity  int
+}
+
+type WeatherMessage struct {
+	City string `json:"city"`
+	Lat  int    `json:"lat"`
+	Lon  int    `json:"lon"`
 }
 
 type MapMessage struct {
@@ -96,10 +105,7 @@ const EXCHANGETYPE string = "topic"
 const TIMEFORMAT string = "20060102150405"
 const CAMERAMONITOR string = "CM"
 const COMPONENT string = "EVM"
-const UPDATESTATEERROR string = "We have received a brand new state update"
-const SERVERERROR string = "Server is failing to send"
-const STATEUPDATESEVERITY int = 2
-const SERVERSEVERITY int = 4
+const SERVERSEVERITY int = 6
 const FAILURECONVERT string = "Failed to convert"
 const FAILUREPUBLISH string = "Failed to publish"
 

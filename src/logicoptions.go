@@ -1,18 +1,10 @@
 package main
 
 import (
-	//"encoding/json"
+	"encoding/json"
 
 	log "github.com/sirupsen/logrus"
 )
-
-func messageFailure(issue bool) string {
-	fail := ""
-	if issue {
-		fail = PublishEventEVM(COMPONENT, SERVERERROR, getTime(), SERVERSEVERITY)
-	}
-	return fail
-}
 
 func checkState() {
 	for message_id := range SubscribedMessagesMap {
@@ -21,13 +13,16 @@ func checkState() {
 			log.Debug("Message routing key is: ", SubscribedMessagesMap[message_id].routing_key)
 			switch {
 			case SubscribedMessagesMap[message_id].routing_key == MOTIONRESPONSE:
-				log.Debug("Received a network failure message")
-				//messageFailure(message.SendEmailRoutine("Serious Network failure"))
+				log.Debug("Received a Motion Response -")
+				var message MotionResponse
+				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				if message.Severity >= 3 {
+					log.Debug("Severity of 3 or more")
+				}
 				SubscribedMessagesMap[message_id].valid = false
 
 			case SubscribedMessagesMap[message_id].routing_key == WEATHER:
-				//messageFailure(message.SendEmailRoutine("Serious Database failure"))
-				//messageFailure(message.SendSMS("Serious Database failure"))
+				log.Debug("Received a Weather Topic -")
 				SubscribedMessagesMap[message_id].valid = false
 
 			default:
