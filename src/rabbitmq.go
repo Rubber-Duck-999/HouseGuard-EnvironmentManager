@@ -11,6 +11,7 @@ import (
 var conn *amqp.Connection
 var ch *amqp.Channel
 var init_err error
+var motionMessage MotionMessage
 
 func init() {
 	log.Trace("Initialised rabbitmq package")
@@ -49,7 +50,7 @@ func messages(routing_key string, value string) {
 				key_id++
 				messages(routing_key, value)
 			} else {
-				log.Debug("Key does not exists, adding new field: ", key_id)
+				log.Debug("Key does not exist, adding new field: ", key_id)
 				entry := MapMessage{value, routing_key, getTime(), true}
 				SubscribedMessagesMap[key_id] = &entry
 				key_id++
@@ -62,6 +63,10 @@ func Subscribe() {
 	log.Trace("Beginning rabbitmq initialisation")
 	log.Warn("Rabbitmq error:", init_err)
 	if init_err == nil {
+		motionMessage.Microwave = false
+		motionMessage.Ultrasound = false
+		motionMessage.Motion = false
+
 		var topics = [2]string{
 			WEATHER,
 			MOTIONRESPONSE,
@@ -76,7 +81,7 @@ func Subscribe() {
 			false,        // no-wait
 			nil,          // arguments
 		)
-		failOnError(err, "FH - Failed to declare an exchange")
+		failOnError(err, "EVM - Failed to declare an exchange")
 
 		q, err := ch.QueueDeclare(
 			"",    // name
@@ -133,6 +138,30 @@ func Subscribe() {
 	}
 }
 
+func PublishMotionDetected(this_time string) string {
+	failure := ""
+	motionDetected, err := json.Marshal(&MotionDetected{
+		Time:     this_time})
+	failOnError(err, "Failed to convert MotionDetected")
+	log.Debug("Publishing Motion Topic")
+	if err == nil {
+		err = ch.Publish(
+			EXCHANGENAME, // exchange
+			FAILURECOMPONENT, // routing key
+			false,        // mandatory
+			false,        // immediate
+			amqp.Publishing{
+				ContentType: "application/json",
+				Body:        []byte(motionDetected),
+			})
+		if err != nil {
+			failOnError(err, "Failed to publish MotionDetected topic")
+			failure = FAILUREPUBLISH
+		}
+	}
+	return failure
+}
+
 func PublishFailureComponent(this_time string, this_severity int) string {
 	failure := ""
 	failureComponent, err := json.Marshal(&FailureMessage{
@@ -152,7 +181,7 @@ func PublishFailureComponent(this_time string, this_severity int) string {
 				Body:        []byte(failureComponent),
 			})
 		if err != nil {
-			failOnError(err, "Failed to publish RequestPower topic")
+			failOnError(err, "Failed to publish FailureComponent topic")
 			failure = FAILURECOMPONENT
 		}
 	}

@@ -13,11 +13,23 @@ func checkState() {
 			log.Debug("Message routing key is: ", SubscribedMessagesMap[message_id].routing_key)
 			switch {
 			case SubscribedMessagesMap[message_id].routing_key == MOTIONRESPONSE:
-				log.Debug("Received a Motion Response -")
+				log.Debug("Received a Motion Response Topic")
 				var message MotionResponse
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				if message.Severity >= 3 {
-					log.Debug("Severity of 3 or more")
+					log.Debug("Severity of Motion from CM is high")
+					if (motionMessage.Motion || (motionMessage.Ultrasound && motionMessage.Microwave)) {
+						log.Warn("Motion is apparent - notifiying service!!")
+						valid := PublishMotionDetected(getTime())
+						if valid != "" {
+							log.Warn("Failed to publish")
+						} else {
+							log.Debug("Published Event Fault Handler")
+							SubscribedMessagesMap[message_id].valid = false
+						}
+					}
+				} else {
+					log.Debug("Severity of motion is too low below 3")
 				}
 				SubscribedMessagesMap[message_id].valid = false
 

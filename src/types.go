@@ -94,6 +94,12 @@ type MapMessage struct {
 	valid       bool
 }
 
+type MotionMessage struct {
+	Microwave   bool  `json:"micro"`
+	Ultrasound  bool  `json:"ultra"`
+	Motion      bool  `json:"motion"`
+}
+
 const WEATHER string = "Weather"
 const FAILURECOMPONENT string = "Failure.Component"
 const MOTIONDETECTED string = "Motion.Detected"
@@ -102,7 +108,7 @@ const ISSUENOTICE string = "Issue.Notice"
 const EVENTEVM string = "Event.EVM"
 const EXCHANGENAME string = "topics"
 const EXCHANGETYPE string = "topic"
-const TIMEFORMAT string = "20060102150405"
+const TIMEFORMAT string = "2006/01/02-15:04:05"
 const CAMERAMONITOR string = "CM"
 const COMPONENT string = "EVM"
 const SERVERSEVERITY int = 6

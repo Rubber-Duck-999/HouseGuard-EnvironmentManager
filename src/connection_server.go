@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"net"
     "strings"
 
@@ -9,7 +10,8 @@ import (
 )
 
 func HandleConnection() {
-	PORT := ":9001"
+	log.Debug("Starting tcp connection to port 9000")
+	PORT := ":9000"
 	l, err := net.Listen("tcp4", PORT)
 	if err != nil {
 			log.Debug("Listen error: ", err)
@@ -27,12 +29,20 @@ func HandleConnection() {
 		for {
 			netData, err := bufio.NewReader(c).ReadString('\n')
 			if err != nil {
-				log.Error(err)
-				return
+				log.Error("Disconnect occured :", err)
+				break
 			}
 	
 			temp := strings.TrimSpace(string(netData))
-			log.Debug("Received : ", temp)
+			log.Trace("Received : ", temp)
+			json.Unmarshal([]byte(temp), &motionMessage)
+			if motionMessage.Motion && motionMessage.Microwave && motionMessage.Ultrasound {
+				log.Warn("Motion is apparent - notifiying service!!")
+				valid := PublishMotionDetected(getTime())
+				if valid != "" {
+					log.Error("Failed to publish")
+				}
+			}
 		}
 		c.Close()
 	}

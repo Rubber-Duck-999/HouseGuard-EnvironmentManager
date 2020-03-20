@@ -6,8 +6,9 @@ Created on 13 Feb 2020
 
 #!/usr/bin/env python
 import pika
-import sys, time, json
+import sys, json
 import subprocess
+import time
 ###
 # Environment Manager Integrator
 # This is to show how the EVM could manage on
@@ -29,8 +30,9 @@ key_detected = 'Motion.Detected'
 # Publishing
 result = channel.queue_declare('', exclusive=False, durable=True)
 queue_name = result.method.queue
-channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_weather)
-channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_motion)
+channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_event)
+channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_failure)
+channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_detected)
 #
 text = '{ "city": "London", "lat": 50.0, "lon": 3 }'
 motion = '{ "severity": 5 }'
