@@ -1,14 +1,14 @@
 # HouseGuard-EnvironmentManager
 
-HouseGuard-EnvironmentManager is the C# component that is part of the HouseGuard solution.
-Its main role is to monitor the sensors in the property and report if it can detect motion.
+HouseGuard-EnvironmentManager is the golang component that is part of the HouseGuard solution.
+Its main role is to monitor the sensors in the property and report if it can detect motion as well as monitoring weather requests.
 
 ## Installation
 
 This 'will' be used on Linux OS
 
 ```bash
- ./buildEnvironmentManager.sh
+ go build
 ```
 
 
