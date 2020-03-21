@@ -16,6 +16,7 @@ func main() {
 	// Parse input
 	err := parser.Parse(os.Args)
 	if err != nil {
+		log.Error("Arguments passed incorrectly")
 		// In case of error print error and print usage
 		// This can also be done by passing -h or --help flags
 		log.Error(parser.Usage(err))

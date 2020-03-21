@@ -6,10 +6,10 @@ type coordinates struct {
 }
 
 type weather []struct {
-	Id int             `json:"id"`
-	Main string        `json:"main"`
+	Id          int    `json:"id"`
+	Main        string `json:"main"`
 	Description string `json:"description"`
-	Icon string        `json:"icon"`
+	Icon        string `json:"icon"`
 }
 
 type mainWeather struct {
@@ -22,8 +22,8 @@ type mainWeather struct {
 }
 
 type wind struct {
-	Speed int `json:"speed"`
-	Deg int   `json:"deg"`
+	Speed int     `json:"speed"`
+	Deg   float64 `json:"deg"`
 }
 
 type cloud struct {
@@ -31,8 +31,8 @@ type cloud struct {
 }
 
 type system struct {
-	Type    int `json:"type"`
-	Id      int `json:"id"`
+	Type    int     `json:"type"`
+	Id      int     `json:"id"`
 	Message float32 `json:"message"`
 	Country string  `json:"country"`
 	Sunrise int64   `json:"sunrise"`
@@ -40,24 +40,24 @@ type system struct {
 }
 
 type WeatherResponse struct {
-	Coord coordinates `json:"coord"`
-	Weather weather   `json:"weather"`
-	Base string       `json:"base"`
-	Main mainWeather  `json:"main"`
-	Visibility int    `json:"visibility"`
-	Wind wind         `json:"wind"`
-	Clouds cloud      `json:"clouds"`
-	DT int64          `json:"dt"`
-	Sys system        `json:"sys"`
-	Timezone int64    `json:"timezone"`
-	ID int64          `json:"id"`
-	Name string       `json:"name"`
-	Cod int           `json:"cod"`
+	Coord      coordinates `json:"coord"`
+	Weather    weather     `json:"weather"`
+	Base       string      `json:"base"`
+	Main       mainWeather `json:"main"`
+	Visibility int         `json:"visibility"`
+	Wind       wind        `json:"wind"`
+	Clouds     cloud       `json:"clouds"`
+	DT         int64       `json:"dt"`
+	Sys        system      `json:"sys"`
+	Timezone   int64       `json:"timezone"`
+	ID         int64       `json:"id"`
+	Name       string      `json:"name"`
+	Cod        int         `json:"cod"`
 }
 
 type FailureMessage struct {
-	Time         string `json:"time"`
-	Severity     int    `json:"severity"`
+	Time     string `json:"time"`
+	Severity int    `json:"severity"`
 }
 
 type MotionResponse struct {
@@ -70,7 +70,7 @@ type MotionDetected struct {
 
 type ConfigTypes struct {
 	Settings struct {
-		Key     string `yaml:"Key"`
+		Key string `yaml:"Key"`
 	} `yaml:"settings"`
 }
 
@@ -82,9 +82,9 @@ type EventEVM struct {
 }
 
 type WeatherMessage struct {
-	City string `json:"city"`
-	Lat  int    `json:"lat"`
-	Lon  int    `json:"lon"`
+	City string  `json:"city"`
+	Lat  float64 `json:"lat"`
+	Lon  float64 `json:"lon"`
 }
 
 type MapMessage struct {
@@ -95,9 +95,9 @@ type MapMessage struct {
 }
 
 type MotionMessage struct {
-	Microwave   bool  `json:"micro"`
-	Ultrasound  bool  `json:"ultra"`
-	Motion      bool  `json:"motion"`
+	Microwave  bool `json:"micro"`
+	Ultrasound bool `json:"ultra"`
+	Motion     bool `json:"motion"`
 }
 
 const WEATHER string = "Weather"
@@ -112,6 +112,7 @@ const TIMEFORMAT string = "2006/01/02-15:04:05"
 const CAMERAMONITOR string = "CM"
 const COMPONENT string = "EVM"
 const SERVERSEVERITY int = 6
+const EVENTTEMP int = 1
 const FAILURECONVERT string = "Failed to convert"
 const FAILUREPUBLISH string = "Failed to publish"
 

@@ -126,7 +126,7 @@ func Subscribe() {
 				messages(d.RoutingKey, s)
 				log.Debug("Checking states of received messages")
 				checkState()
-        	}
+			}
 			//This function is checked after to see if multiple errors occur then to
 			//through an event message
 		}()
@@ -141,15 +141,15 @@ func Subscribe() {
 func PublishMotionDetected(this_time string) string {
 	failure := ""
 	motionDetected, err := json.Marshal(&MotionDetected{
-		Time:     this_time})
+		Time: this_time})
 	failOnError(err, "Failed to convert MotionDetected")
 	log.Debug("Publishing Motion Topic")
 	if err == nil {
 		err = ch.Publish(
-			EXCHANGENAME, // exchange
+			EXCHANGENAME,     // exchange
 			FAILURECOMPONENT, // routing key
-			false,        // mandatory
-			false,        // immediate
+			false,            // mandatory
+			false,            // immediate
 			amqp.Publishing{
 				ContentType: "application/json",
 				Body:        []byte(motionDetected),
@@ -168,14 +168,13 @@ func PublishFailureComponent(this_time string, this_severity int) string {
 		Time:     this_time,
 		Severity: this_severity})
 	failOnError(err, "Failed to convert FailureMessage")
-	log.Debug(string(failureComponent))
 
 	if err == nil {
 		err = ch.Publish(
-			EXCHANGENAME, // exchange
+			EXCHANGENAME,     // exchange
 			FAILURECOMPONENT, // routing key
-			false,        // mandatory
-			false,        // immediate
+			false,            // mandatory
+			false,            // immediate
 			amqp.Publishing{
 				ContentType: "application/json",
 				Body:        []byte(failureComponent),
@@ -188,11 +187,11 @@ func PublishFailureComponent(this_time string, this_severity int) string {
 	return failure
 }
 
-func PublishEventEVM(component string, message string, time string, severity int) string {
+func PublishEventEVM(message string, time string, severity int) string {
 	failure := ""
 
 	eventEVM, err := json.Marshal(&EventEVM{
-		Component: component,
+		Component: COMPONENT,
 		Message:   message,
 		Time:      time,
 		Severity:  severity})
