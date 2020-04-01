@@ -147,7 +147,7 @@ func PublishMotionDetected(this_time string) string {
 	if err == nil {
 		err = ch.Publish(
 			EXCHANGENAME,     // exchange
-			FAILURECOMPONENT, // routing key
+			MOTIONDETECTED, // routing key
 			false,            // mandatory
 			false,            // immediate
 			amqp.Publishing{
