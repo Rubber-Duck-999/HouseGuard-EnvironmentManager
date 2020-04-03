@@ -8,6 +8,7 @@
 /bin/*
 /src/pkg/
 /config.yml
+/EVM.yml
 /pkg/
 /src/exeEnvironmentManager
 /src/exeEnvironmentManager.exe
