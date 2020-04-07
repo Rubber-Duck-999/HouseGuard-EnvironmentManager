@@ -81,12 +81,6 @@ type EventEVM struct {
 	Severity  int
 }
 
-type WeatherMessage struct {
-	City string  `json:"city"`
-	Lat  float64 `json:"lat"`
-	Lon  float64 `json:"lon"`
-}
-
 type MapMessage struct {
 	message     string
 	routing_key string
@@ -100,7 +94,6 @@ type MotionMessage struct {
 	Motion     bool `json:"motion"`
 }
 
-const WEATHER string = "Weather"
 const FAILURECOMPONENT string = "Failure.Component"
 const MOTIONDETECTED string = "Motion.Detected"
 const MOTIONRESPONSE string = "Motion.Response"
@@ -113,6 +106,8 @@ const CAMERAMONITOR string = "CM"
 const COMPONENT string = "EVM"
 const SERVERSEVERITY int = 6
 const EVENTTEMP int = 1
+const WEATHERAPI string = "Weather api not accessible"
+const TEMPERATUREMESSAGE string = "Temperature ="
 const FAILURECONVERT string = "Failed to convert"
 const FAILUREPUBLISH string = "Failed to publish"
 

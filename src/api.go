@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
+	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -15,6 +17,29 @@ var run bool
 func SetKeys(api_key string) {
 	apiKey = api_key
 	run = true
+}
+
+func GetWeather() {
+	currentTime := time.Now()  
+    timeStampString := currentTime.Format("2006-01-02 15:04:05")    
+    layOut := "2006-01-02 15:04:05"    
+    timeStamp, err := time.Parse(layOut, timeStampString)
+    if err != nil {
+        log.Error("Error on time: ", err)          
+    }   
+    _, min, sec := timeStamp.Clock()
+	if min == 30 {
+		if sec >= 10 && sec <= 12 {}
+		log.Debug("Time is in range")
+		float, error := ApiCallCity("Gloucester")
+		if error != nil {
+			log.Error("Failure to get temperature")
+			PublishEventEVM(WEATHERAPI, getTime())
+		} else {
+			temp := strconv.FormatFloat(float, 'f', 6, 64) 
+			PublishEventEVM(TEMPERATUREMESSAGE + temp, getTime())
+		}
+	}
 }
 
 func ApiCallCoord(lat float64, lon float64) (temp float64, err error) {

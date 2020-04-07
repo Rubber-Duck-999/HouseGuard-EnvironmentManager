@@ -14,8 +14,8 @@ func HandleConnection() {
 	PORT := ":9000"
 	l, err := net.Listen("tcp4", PORT)
 	if err != nil {
-			log.Debug("Listen error: ", err)
-			return
+		log.Debug("Listen error: ", err)
+		return
 	}
 	defer l.Close()
 

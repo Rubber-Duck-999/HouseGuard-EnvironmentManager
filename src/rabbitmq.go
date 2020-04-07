@@ -12,6 +12,8 @@ var conn *amqp.Connection
 var ch *amqp.Channel
 var init_err error
 var motionMessage MotionMessage
+var tempSet bool
+var temp float64
 
 func init() {
 	log.Trace("Initialised rabbitmq package")
@@ -67,8 +69,7 @@ func Subscribe() {
 		motionMessage.Ultrasound = false
 		motionMessage.Motion = false
 
-		var topics = [2]string{
-			WEATHER,
+		var topics = [1]string{
 			MOTIONRESPONSE,
 		}
 
@@ -126,6 +127,7 @@ func Subscribe() {
 				messages(d.RoutingKey, s)
 				log.Debug("Checking states of received messages")
 				checkState()
+				GetWeather()
 			}
 			//This function is checked after to see if multiple errors occur then to
 			//through an event message
@@ -187,14 +189,13 @@ func PublishFailureComponent(this_time string, this_severity int) string {
 	return failure
 }
 
-func PublishEventEVM(message string, time string, severity int) string {
+func PublishEventEVM(message string, time string) string {
 	failure := ""
 
 	eventEVM, err := json.Marshal(&EventEVM{
 		Component: COMPONENT,
 		Message:   message,
-		Time:      time,
-		Severity:  severity})
+		Time:      time})
 	if err != nil {
 		failure = "Failed to convert EventEVM"
 	} else {

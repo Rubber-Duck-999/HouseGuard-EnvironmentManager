@@ -11,7 +11,7 @@ class Client:
         self.ssid = ""
         self.paswd = ""
         self.port = 9000
-        self.addr = '192.168.0.25'
+        self.addr = '192.168.0.18'
         self.error = False
 
     def openFile(self):
@@ -20,7 +20,7 @@ class Client:
         file = open("pswd.txt", "r")
         self.pswd = file.readline()
         print("Ssid is:" + self.ssid + ".")
-        print("Paswd is length:" + self.pswd + ".")
+        print("Paswd is length:" + str(len(self.pswd)) + ".")
         if len(self.ssid) == 0:
             print("Variables in file are empty")
             self.error = True
@@ -32,7 +32,7 @@ class Client:
             station = network.WLAN(network.STA_IF)
             if station.isconnected() == True:
                 print("Already connected")
-                return
+                #return
     
             station.active(True)
             station.connect(self.ssid, self.pswd)
@@ -47,12 +47,13 @@ class Client:
         try:
             sock = socket.socket()
             addrinfos = socket.getaddrinfo(self.addr, self.port)
+            print(addrinfos)
             # (host and port to connect to are in 5th element of the first tuple in the addrinfos list
             sock.connect(addrinfos[0][-1])
             print("Reconnected")
             while not self.error:
-                sleep(2)
-                sock.send('{ "micro": true, "ultra": true, "motion": true }\n')
+                sleep(8)
+                sock.send('{ "micro": false, "ultra": false, "motion": true }\n')
             sock.close()
         except OSError:
             print("Connection Refused")

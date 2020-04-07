@@ -20,7 +20,6 @@ credentials = pika.PlainCredentials('guest', 'password')
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672, '/', credentials))
 channel = connection.channel()
 channel.exchange_declare(exchange='topics', exchange_type='topic', durable=True)
-key_weather = 'Weather'
 key_motion = 'Motion.Response'
 key_failure = 'Failure.Component'
 key_event = 'Event.EVM'
@@ -34,9 +33,7 @@ channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_event)
 channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_failure)
 channel.queue_bind(exchange='topics', queue=queue_name, routing_key=key_detected)
 #
-text = '{ "city": "London", "lat": 50.0, "lon": 3 }'
 motion = '{ "severity": 5 }'
-channel.basic_publish(exchange='topics', routing_key=key_weather, body=text)
 channel.basic_publish(exchange='topics', routing_key=key_motion, body=motion)
 #
 print("Waiting for Messages")
