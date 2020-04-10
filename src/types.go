@@ -106,6 +106,7 @@ const CAMERAMONITOR string = "CM"
 const COMPONENT string = "EVM"
 const SERVERSEVERITY int = 6
 const EVENTTEMP int = 1
+const SENSORNETWORKDOWN string = "Lost connection to sensor"
 const WEATHERAPI string = "Weather api not accessible"
 const TEMPERATUREMESSAGE string = "Temperature ="
 const FAILURECONVERT string = "Failed to convert"

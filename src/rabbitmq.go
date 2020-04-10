@@ -14,6 +14,10 @@ var init_err error
 var motionMessage MotionMessage
 var tempSet bool
 var temp float64
+var _year int 
+var _month time.Month
+var _day int
+var _messages_sent int
 
 func init() {
 	log.Trace("Initialised rabbitmq package")
@@ -68,6 +72,8 @@ func Subscribe() {
 		motionMessage.Microwave = false
 		motionMessage.Ultrasound = false
 		motionMessage.Motion = false
+
+		setDate()
 
 		var topics = [1]string{
 			MOTIONRESPONSE,
@@ -139,6 +145,33 @@ func Subscribe() {
 		<-forever
 	}
 }
+
+func setDate() {
+	_year, _month, _day = time.Now().Date()
+	_messages_sent = 0
+}
+
+func checkCanSend() bool {
+	year, month, day := time.Now().Date()
+	if year == _year {
+		if month == _month {
+			if day == _day {
+				if _messages_sent <= 5 {
+					_messages_sent++
+					return true
+				} else {
+					log.Error("Max messages sent")
+					return false
+				}
+			} else {
+				setDate()
+				checkCanSend()
+			}
+		}
+	}
+	return false
+}
+
 
 func PublishMotionDetected(this_time string) string {
 	failure := ""

@@ -30,6 +30,7 @@ func HandleConnection() {
 			netData, err := bufio.NewReader(c).ReadString('\n')
 			if err != nil {
 				log.Error("Disconnect occured :", err)
+				PublishEventEVM(SENSORNETWORKDOWN, getTime())
 				break
 			}
 	
