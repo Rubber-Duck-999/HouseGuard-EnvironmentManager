@@ -173,9 +173,10 @@ func checkCanSend() bool {
 }
 
 
-func PublishMotionDetected(this_time string) string {
+func PublishMotionDetected(this_time string, file string) string {
 	failure := ""
 	motionDetected, err := json.Marshal(&MotionDetected{
+		File: file,
 		Time: this_time})
 	failOnError(err, "Failed to convert MotionDetected")
 	log.Debug("Publishing Motion Topic")

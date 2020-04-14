@@ -61,10 +61,13 @@ type FailureMessage struct {
 }
 
 type MotionResponse struct {
+	File string `json:"file"`
+	Time string `json:"time"`
 	Severity int `json:"severity"`
 }
 
 type MotionDetected struct {
+	File string
 	Time string
 }
 

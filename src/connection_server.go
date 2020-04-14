@@ -39,7 +39,7 @@ func HandleConnection() {
 			json.Unmarshal([]byte(temp), &motionMessage)
 			if motionMessage.Motion && motionMessage.Microwave && motionMessage.Ultrasound {
 				log.Warn("Motion is apparent - notifiying service!!")
-				valid := PublishMotionDetected(getTime())
+				valid := PublishMotionDetected(getTime(), "N/A")
 				if valid != "" {
 					log.Error("Failed to publish")
 				}

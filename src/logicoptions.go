@@ -18,10 +18,10 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				if checkCanSend() {
 					if message.Severity == 2 && message.Severity == 3 {
-						log.Warn("Severity of Motion from CM is mdeium")
+						log.Warn("Severity of Motion from CM is medium")
 						if motionMessage.Motion || (motionMessage.Ultrasound && motionMessage.Microwave) {
 							log.Warn("Motion is apparent - notifiying service!!")
-							valid := PublishMotionDetected(getTime())
+							valid := PublishMotionDetected(getTime(), message.File)
 							if valid != "" {
 								log.Warn("Failed to publish")
 							} else {
@@ -32,7 +32,7 @@ func checkState() {
 					} else if message.Severity == 4 {
 						log.Debug("Severity of motion is high")
 						log.Warn("Motion is apparent - notifiying service!!")
-						valid := PublishMotionDetected(getTime())
+						valid := PublishMotionDetected(getTime(), message.File)
 						if valid != "" {
 							log.Warn("Failed to publish")
 						} else {
