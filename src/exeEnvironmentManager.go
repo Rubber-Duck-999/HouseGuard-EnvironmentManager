@@ -32,6 +32,7 @@ func main() {
 		os.Exit(2)
 	}
 	log.Trace(data)
+	SetPassword(data.Settings.Pass)
 	SetKeys(data.Settings.Key)
 	Subscribe()
 }

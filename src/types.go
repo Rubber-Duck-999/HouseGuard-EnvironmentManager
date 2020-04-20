@@ -74,6 +74,7 @@ type MotionDetected struct {
 type ConfigTypes struct {
 	Settings struct {
 		Key string `yaml:"Key"`
+		Pass string `yaml:"Pass"`
 	} `yaml:"settings"`
 }
 
