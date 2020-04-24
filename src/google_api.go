@@ -47,7 +47,7 @@ func usage() {
 	os.Exit(2)
 }
 
-func google_api() {
+func google_drive() {
 	flag.Parse()
 	if flag.NArg() == 0 {
 		usage()
