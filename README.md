@@ -1,7 +1,7 @@
 # HouseGuard-EnvironmentManager
 
 HouseGuard-EnvironmentManager is the golang component that is part of the HouseGuard solution.
-Its main role is to monitor the sensors in the property and report if it can detect motion as well as monitoring weather requests.
+Its main role is to communicate with the google drive api and upload motion images created by CM whilst moitoring for human sound on the audio sensor. This component is relied upon to establish outside network communication.
 
 ## Installation
 
