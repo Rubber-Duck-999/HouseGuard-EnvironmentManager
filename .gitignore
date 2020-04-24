@@ -12,3 +12,5 @@
 /pkg/
 /src/exeEnvironmentManager
 /src/exeEnvironmentManager.exe
+credentials.json
+*.dat
