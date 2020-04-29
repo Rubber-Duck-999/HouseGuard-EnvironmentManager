@@ -13,6 +13,7 @@ import (
 	"os"
 )
 
+
 type logTransport struct {
 	rt http.RoundTripper
 }
@@ -46,6 +47,7 @@ func (t *logTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 	return res, err
 }
+
 
 type echoAsRead struct {
 	src io.Reader

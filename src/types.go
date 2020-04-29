@@ -82,7 +82,6 @@ type EventEVM struct {
 	Component string
 	Message   string
 	Time      string
-	Severity  int
 }
 
 type MapMessage struct {
@@ -92,16 +91,9 @@ type MapMessage struct {
 	valid       bool
 }
 
-type MotionMessage struct {
-	Microwave  bool `json:"micro"`
-	Ultrasound bool `json:"ultra"`
-	Motion     bool `json:"motion"`
-}
-
 const FAILURECOMPONENT string = "Failure.Component"
 const MOTIONDETECTED string = "Motion.Detected"
 const MOTIONRESPONSE string = "Motion.Response"
-const ISSUENOTICE string = "Issue.Notice"
 const EVENTEVM string = "Event.EVM"
 const EXCHANGENAME string = "topics"
 const EXCHANGETYPE string = "topic"
@@ -110,6 +102,7 @@ const CAMERAMONITOR string = "CM"
 const COMPONENT string = "EVM"
 const SERVERSEVERITY int = 6
 const EVENTTEMP int = 1
+const MAXMESSAGES int = 10
 const SENSORNETWORKDOWN string = "Lost connection to sensor"
 const WEATHERAPI string = "Weather api not accessible"
 const TEMPERATUREMESSAGE string = "Temperature ="

@@ -33,58 +33,29 @@ func TestFolderInvalid(t *testing.T) {
 	}
 }
 
-/*
+
 func TestConfigGetNull(t *testing.T) {
-	var file string = `config.ymlsample`
+	var file string = `../config.ymlsample`
 	var data ConfigTypes
 	GetData(&data, file)
-	if data.Settings.Key == "" {
+	if data.Settings.Key != "" {
 		t.Error("Failure")
 	}
-	if data.Settings.Api_Key == "" {
+	if data.Settings.Pass != "" {
 		t.Error("Failure")
 	}
 }
 
 func TestConfigGetAll(t *testing.T) {
-	var file string = `config.yml-sample`
+	var file string = `../config.yml-sample`
 	var data ConfigTypes
 	if GetData(&data, file) == false {
 		t.Error("Failure")
 	}
-	if data.Settings.Key != "" {
+	if data.Settings.Key != "null" {
 		t.Error("Failure")
 	}
-	if data.Settings.Api_Key != "" {
-		t.Error("Failure")
-	}
-}*/
-
-/*
-func TestConfigFail(t *testing.T) {
-	var file string = `config.yml-fail`
-	var data ConfigTypes
-	if GetData(&data, file) == true {
-		t.Error("Failure")
-	}
-	if data.Settings.Key != "" {
-		t.Error("Failure")
-	}
-	if data.Settings.Key != "" {
+	if data.Settings.Pass != "cheese" {
 		t.Error("Failure")
 	}
 }
-
-func TestIncorrectConfig(t *testing.T) {
-	var file string = `config.yml-fail`
-	var data ConfigTypes
-	if GetData(&data, file) == true {
-		t.Error("Failure")
-	}
-	if data.Settings.Key != "" {
-		t.Error("Failure")
-	}
-	if data.Settings.Key != "" {
-		t.Error("Failure")
-	}
-}*/

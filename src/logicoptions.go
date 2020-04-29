@@ -44,31 +44,17 @@ func checkState() {
 				var message MotionResponse
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				if checkCanSend() {
-					if message.Severity == 2 && message.Severity == 3 {
-						log.Warn("Severity of Motion from CM is medium")
-						if motionMessage.Motion || (motionMessage.Ultrasound && motionMessage.Microwave) {
-							log.Warn("Motion is apparent - notifiying service!!")
-							valid := PublishMotionDetected(getTime(), message.File)
-							if valid != "" {
-								log.Warn("Failed to publish")
-							} else {
-								log.Debug("Published Motion Detected Topic")
-								SubscribedMessagesMap[message_id].valid = false
-							}
-						}
-					} else if message.Severity == 4 {
-						log.Debug("Severity of motion is high")
-						log.Warn("Motion is apparent - notifiying service!!")
-						valid := PublishMotionDetected(getTime(), message.File)
+					log.Debug("Severity of motion is high")
+					log.Warn("Motion is apparent - notifiying service!!")
+					valid := PublishMotionDetected(getTime(), message.File)
+					if message.File == "N/A" {
 						driveMain(message.File)
-						if valid != "" {
-							log.Warn("Failed to publish")
-						} else {
-							log.Debug("Published Motion Detected Topic")
-							SubscribedMessagesMap[message_id].valid = false
-						}
+					}
+					if valid != "" {
+						log.Warn("Failed to publish")
 					} else {
-						log.Debug("Severity of motion is too low below 3")
+						log.Debug("Published Motion Detected Topic")
+						SubscribedMessagesMap[message_id].valid = false
 					}
 				} else {
 					log.Error("We have received too many motions today")

@@ -12,17 +12,18 @@ var conn *amqp.Connection
 var ch *amqp.Channel
 var password string
 var init_err error
-var motionMessage MotionMessage
 var tempSet bool
-var temp float64
+var current_temp string
+var float float64
 var _year int 
 var _month time.Month
 var _day int
-var _minute int 
 var _messages_sent int
 
 func init() {
 	log.Trace("Initialised rabbitmq package")
+	current_temp = "0"
+	float = 0.00
 }
 
 func SetPassword(pass string) {
@@ -66,7 +67,7 @@ func messages(routing_key string, value string) {
 	}
 }
 
-func Subscribe() {
+func SetConnection() error {
 	conn, init_err = amqp.Dial("amqp://guest:" + password + "@localhost:5672/")
 	failOnError(init_err, "Failed to connect to RabbitMQ")
 
@@ -74,10 +75,12 @@ func Subscribe() {
 	failOnError(init_err, "Failed to open a channel")
 	log.Trace("Beginning rabbitmq initialisation")
 	log.Warn("Rabbitmq error:", init_err)
-	if init_err == nil {
-		motionMessage.Microwave = false
-		motionMessage.Ultrasound = false
-		motionMessage.Motion = false
+	return init_err
+}
+
+func Subscribe() {
+	init := SetConnection()
+	if init == nil {
 
 		setDate()
 
@@ -145,8 +148,6 @@ func Subscribe() {
 			//through an event message
 		}()
 
-		go HandleConnection()
-
 		log.Trace(" [*] Waiting for logs. To exit press CTRL+C")
 		<-forever
 	}
@@ -154,8 +155,6 @@ func Subscribe() {
 
 func setDate() {
 	_year, _month, _day = time.Now().Date()
-	t := time.Now()
-	_minute = t.Minute()
 	_messages_sent = 0
 }
 
@@ -164,20 +163,12 @@ func checkCanSend() bool {
 	if year == _year {
 		if month == _month {
 			if day == _day {
-				t := time.Now()
-				m := t.Minute()
-				if _minute != m {
-					if _messages_sent <= 10 {
-						_minute = m
-						_messages_sent++
-						return true
-					} else {
-						log.Error("Max messages sent")
-						return false
-					}
+				if _messages_sent <= MAXMESSAGES {
+					_messages_sent++
+					return true
 				} else {
-					log.Warn("Wrong minute wait: ", _minute)
-					log.Warn("Current minute: ", m)
+					log.Error("Max messages sent")
+					return false
 				}
 			} else {
 				setDate()
