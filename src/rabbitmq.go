@@ -19,7 +19,6 @@ var _year int
 var _month time.Month
 var _day int
 var _messages_sent int
-var suspend Suspend
 
 func init() {
 	log.Trace("Initialised rabbitmq package")
@@ -85,9 +84,8 @@ func Subscribe() {
 
 		setDate()
 
-		var topics = [2]string{
+		var topics = [1]string{
 			MOTIONRESPONSE,
-			PAUSEEVM
 		}
 
 		err := ch.ExchangeDeclare(

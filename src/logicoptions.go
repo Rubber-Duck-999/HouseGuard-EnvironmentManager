@@ -61,19 +61,6 @@ func checkState() {
 				}
 				SubscribedMessagesMap[message_id].valid = false
 				cleanUp()
-				
-			case SubscribedMessagesMap[message_id].routing_key == PAUSEEVM:
-				log.Debug("Received a Pause EVM topic")
-				var message PauseEVM
-				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
-				switch {
-				case message.Type == AUDIO:
-					log.Debug("We need to suspend audio ON/OFF")
-					if message.Length == 0 {
-						log.Debug("Turning ON")
-						suspend.audio = true
-					}
-				}
 
 			default:
 				log.Warn("We were not expecting this message unvalidating: ",

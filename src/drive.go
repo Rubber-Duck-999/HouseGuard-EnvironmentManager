@@ -56,35 +56,33 @@ func init() {
 
 func driveMain(file string) {
 
-	if suspend.drive == false {
-		config := &oauth2.Config{
-			ClientID:     valueOrFileContents(*clientID, *clientIDFile),
-			ClientSecret: valueOrFileContents(*secret, *secretFile),
-			Endpoint:     google.Endpoint,
-			Scopes:       []string{demoScope["drive"]},
-		}
-	
-		ctx := context.Background()
-		if *debug {
-			ctx = context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
-				Transport: &logTransport{http.DefaultTransport},
-			})
-		}
-		client := newOAuthClient(ctx, config)
-	
-		service, err := drive.New(client)
-		if err != nil {
-			log.Fatalf("Unable to create Drive service: %v", err)
-		}
-	
-		goFile, err := os.Open(file)
-		if err != nil {
-			log.Fatalf("error opening %q: %v", file, err)
-		}
-	
-		driveFile, err := service.Files.Insert(&drive.File{Title: file}).Media(goFile).Do()
-		log.Printf("Got drive.File, err: %#v, %v", driveFile, err)
+	config := &oauth2.Config{
+		ClientID:     valueOrFileContents(*clientID, *clientIDFile),
+		ClientSecret: valueOrFileContents(*secret, *secretFile),
+		Endpoint:     google.Endpoint,
+		Scopes:       []string{demoScope["drive"]},
 	}
+	
+	ctx := context.Background()
+	if *debug {
+		ctx = context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
+			Transport: &logTransport{http.DefaultTransport},
+		})
+	}
+	client := newOAuthClient(ctx, config)
+
+	service, err := drive.New(client)
+	if err != nil {
+		log.Fatalf("Unable to create Drive service: %v", err)
+	}
+	
+	goFile, err := os.Open(file)
+	if err != nil {
+		log.Fatalf("error opening %q: %v", file, err)
+	}
+
+	driveFile, err := service.Files.Insert(&drive.File{Title: file}).Media(goFile).Do()
+	log.Printf("Got drive.File, err: %#v, %v", driveFile, err)
 }
 
 var (

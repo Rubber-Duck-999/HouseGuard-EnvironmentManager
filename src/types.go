@@ -84,11 +84,6 @@ type EventEVM struct {
 	Time      string
 }
 
-type PauseEVM struct {
-	Type string `json:"type"`
-	Length int `json:"length"`
-}
-
 type MapMessage struct {
 	message     string
 	routing_key string
@@ -96,18 +91,9 @@ type MapMessage struct {
 	valid       bool
 }
 
-type Suspend struct {
-	drive bool
-	audio bool
-	rabbitmq bool
-	evm bool
-	length int
-}
-
 const FAILURECOMPONENT string = "Failure.Component"
 const MOTIONDETECTED string = "Motion.Detected"
 const MOTIONRESPONSE string = "Motion.Response"
-const PAUSEEVM string = "Pause.EVM"
 const EVENTEVM string = "Event.EVM"
 const EXCHANGENAME string = "topics"
 const EXCHANGETYPE string = "topic"
@@ -122,12 +108,6 @@ const WEATHERAPI string = "Weather api not accessible"
 const TEMPERATUREMESSAGE string = "Temperature ="
 const FAILURECONVERT string = "Failed to convert"
 const FAILUREPUBLISH string = "Failed to publish"
-
-//Pause EVM type
-const AUDIO string = "audio"
-const DRIVE string = "drive"
-const RABBITMQ string = "rabbitmq"
-const EVM string = "evm"
 
 var SubscribedMessagesMap map[uint32]*MapMessage
 var key_id uint32 = 0
