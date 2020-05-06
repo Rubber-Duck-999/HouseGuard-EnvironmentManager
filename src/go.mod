@@ -5,10 +5,10 @@ go 1.13
 require (
 	github.com/akamensky/argparse v1.2.1
 	github.com/clarketm/json v1.14.1
-	github.com/sirupsen/logrus v1.5.0
+	github.com/sirupsen/logrus v1.6.0
 	github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
 	golang.org/x/net v0.0.0-20190503192946-f4e77d36d62c
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	google.golang.org/api v0.22.0
+	google.golang.org/api v0.23.0
 	gopkg.in/yaml.v2 v2.2.8
 )
