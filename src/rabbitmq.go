@@ -19,11 +19,52 @@ var _year int
 var _month time.Month
 var _day int
 var _messages_sent int
+//Status
+var _statusDBM StatusDBM
+var _statusSYP StatusSYP
+var _statusFH  StatusFH 
+var _statusNAC StatusNAC
+var _statusEVM StatusEVM
+var _statusUP  StatusUP
+//
+
 
 func init() {
 	log.Trace("Initialised rabbitmq package")
 	current_temp = "0"
 	float = 0.00
+	_statusDBM = StatusDBM{
+		DailyEvents: 0,
+		TotalEvents: 0,
+		CommonEvent: "N/A",
+		DailyDataRequests: 0}
+
+	_statusSYP = StatusSYP{
+		HighestUsage: 0,
+		MemoryLeft: 0}
+
+	_statusFH = StatusFH{
+		DailyFaults: 0,
+		CommonFaults: "N/A"}
+
+	_statusNAC = StatusNAC{
+		DevicesActive: 0,
+		DailyBlockedDevices: 0,
+		DailyUnknownDevices: 0,
+		DailyAllowedDevices: 0,
+		TimeEscConnected: "N/A"}
+
+	_statusEVM = StatusEVM{
+		DailyImagesTaken: 0,
+		CurrentTemperature: 0,
+		LastMotionDetected: "N/A"}
+
+	_statusUP = StatusUP{
+		LastAccessGranted: "N/A",
+		LastAccessBlocked: "N/A",
+		CurrentAlarmState: "ON",
+		LastUser: "N/A"}
+	
 }
 
 func SetPassword(pass string) {
@@ -84,8 +125,9 @@ func Subscribe() {
 
 		setDate()
 
-		var topics = [1]string{
+		var topics = [2]string{
 			MOTIONRESPONSE,
+			STATUSALL,
 		}
 
 		err := ch.ExchangeDeclare(
@@ -142,11 +184,12 @@ func Subscribe() {
 				messages(d.RoutingKey, s)
 				log.Debug("Checking states of received messages")
 				checkState()
-				GetWeather()
 			}
 			//This function is checked after to see if multiple errors occur then to
 			//through an event message
 		}()
+		
+		go GetWeather()
 
 		log.Trace(" [*] Waiting for logs. To exit press CTRL+C")
 		<-forever

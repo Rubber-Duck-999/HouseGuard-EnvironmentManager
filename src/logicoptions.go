@@ -48,7 +48,7 @@ func checkState() {
 					log.Warn("Motion is apparent - notifiying service!!")
 					valid := PublishMotionDetected(getTime(), message.File)
 					if message.File == "N/A" {
-						driveMain(message.File)
+						driveAddFile(message.File)
 					}
 					if valid != "" {
 						log.Warn("Failed to publish")
@@ -61,6 +61,46 @@ func checkState() {
 				}
 				SubscribedMessagesMap[message_id].valid = false
 				cleanUp()
+
+			case SubscribedMessagesMap[message_id].routing_key == STATUSDBM:
+				log.Debug("Received a Status DBM Topic")
+				var message StatusDBM
+				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				_statusDBM = message
+				driveUpdateStatus()
+				SubscribedMessagesMap[message_id].valid = false
+
+			case SubscribedMessagesMap[message_id].routing_key == STATUSSYP:
+				log.Debug("Received a Status SYP Topic")
+				var message StatusSYP
+				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				_statusSYP = message
+				driveUpdateStatus()
+				SubscribedMessagesMap[message_id].valid = false
+
+			case SubscribedMessagesMap[message_id].routing_key == STATUSFH:
+				log.Debug("Received a Status FH Topic")
+				var message StatusFH
+				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				_statusFH = message
+				driveUpdateStatus()
+				SubscribedMessagesMap[message_id].valid = false
+
+			case SubscribedMessagesMap[message_id].routing_key == STATUSNAC:
+				log.Debug("Received a Status NAC Topic")
+				var message StatusNAC
+				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				_statusNAC = message
+				driveUpdateStatus()
+				SubscribedMessagesMap[message_id].valid = false
+
+			case SubscribedMessagesMap[message_id].routing_key == STATUSUP:
+				log.Debug("Received a Status UP Topic")
+				var message StatusUP
+				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				_statusUP = message
+				driveUpdateStatus()
+				SubscribedMessagesMap[message_id].valid = false
 
 			default:
 				log.Warn("We were not expecting this message unvalidating: ",

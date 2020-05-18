@@ -36,8 +36,10 @@ import (
 	drive "google.golang.org/api/drive/v2"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	"google.golang.org/api/sheets/v4"
 )
 
+var _spreadsheet string
 // Flags
 var (
 	clientID     = flag.String("clientid", "", "OAuth 2.0 Client ID.  If non-empty, overrides --clientid_file")
@@ -54,7 +56,109 @@ func init() {
 	registerDemo("drive", drive.DriveScope)
 }
 
-func driveMain(file string) {
+func SetSheet(sheet string) {
+	_spreadsheet = sheet
+}
+
+func driveUpdateStatus() {
+	config := &oauth2.Config{
+		ClientID:     valueOrFileContents(*clientID, *clientIDFile),
+		ClientSecret: valueOrFileContents(*secret, *secretFile),
+		Endpoint:     google.Endpoint,
+		Scopes:       []string{demoScope["drive"]},
+	}
+	
+	ctx := context.Background()
+	if *debug {
+		ctx = context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
+			Transport: &logTransport{http.DefaultTransport},
+		})
+	}
+	client := newOAuthClient(ctx, config)
+
+	srv, err := sheets.New(client)
+	if err != nil {
+			log.Fatalf("Unable to retrieve Sheets client: %v", err)
+	}
+
+	// Prints the names and majors of students in a sample spreadsheet:
+	// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+	spreadsheetId := _spreadsheet
+	// Status DBM
+	writeRange := "A2"
+    var vr sheets.ValueRange
+	myval := []interface{}{"LIVE", _statusDBM.DailyEvents, _statusDBM.TotalEvents,
+							_statusDBM.CommonEvent, _statusDBM.DailyDataRequests}
+    vr.Values = append(vr.Values, myval)
+
+    _, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr).ValueInputOption("RAW").Do()
+    if err != nil {
+        log.Fatalf("Unable to retrieve data from sheet. %v", err)
+	}
+	
+	// Status SYP
+	writeRange = "A5"
+    var vr2 sheets.ValueRange
+	myval = []interface{}{_statusSYP.HighestUsage, _statusSYP.MemoryLeft}
+    vr2.Values = append(vr2.Values, myval)
+
+    _, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr2).ValueInputOption("RAW").Do()
+    if err != nil {
+        log.Fatalf("Unable to retrieve data from sheet. %v", err)
+	}
+	
+	// Status FH
+	writeRange = "A8"
+    var vr3 sheets.ValueRange
+	myval = []interface{}{_statusFH.DailyFaults, _statusFH.CommonFaults}
+    vr3.Values = append(vr3.Values, myval)
+
+    _, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr3).ValueInputOption("RAW").Do()
+    if err != nil {
+        log.Fatalf("Unable to retrieve data from sheet. %v", err)
+	}
+
+	// Status NAC
+	writeRange = "A11"
+    var vr4 sheets.ValueRange
+	myval = []interface{}{_statusNAC.DevicesActive, _statusNAC.DailyBlockedDevices,
+							_statusNAC.DailyUnknownDevices, _statusNAC.DailyAllowedDevices,
+							_statusNAC.TimeEscConnected}
+    vr4.Values = append(vr4.Values, myval)
+
+    _, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr4).ValueInputOption("RAW").Do()
+    if err != nil {
+        log.Fatalf("Unable to retrieve data from sheet. %v", err)
+	}
+	
+	// Status EVM 
+	writeRange = "A14"
+    var vr5 sheets.ValueRange
+	myval = []interface{}{_statusEVM.DailyImagesTaken, _statusEVM.CurrentTemperature,
+							_statusEVM.LastMotionDetected}
+    vr5.Values = append(vr5.Values, myval)
+
+    _, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr5).ValueInputOption("RAW").Do()
+    if err != nil {
+        log.Fatalf("Unable to retrieve data from sheet. %v", err)
+	}
+
+	// Status UP
+	writeRange = "A17"
+	var vr6 sheets.ValueRange
+	myval = []interface{}{_statusUP.LastAccessGranted, _statusUP.LastAccessBlocked,
+							_statusUP.CurrentAlarmState, _statusUP.LastUser}
+	vr6.Values = append(vr6.Values, myval)
+
+	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr6).ValueInputOption("RAW").Do()
+	if err != nil {
+		log.Fatalf("Unable to retrieve data from sheet. %v", err)
+	}
+
+
+}
+
+func driveAddFile(file string) {
 
 	config := &oauth2.Config{
 		ClientID:     valueOrFileContents(*clientID, *clientIDFile),

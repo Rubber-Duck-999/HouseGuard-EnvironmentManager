@@ -33,5 +33,7 @@ func main() {
 	}
 	SetPassword(data.Settings.Pass)
 	SetKeys(data.Settings.Key)
+	SetSheet(data.Settings.Sheet)
+	driveUpdateStatus()
 	Subscribe()
 }

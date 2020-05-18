@@ -75,6 +75,7 @@ type ConfigTypes struct {
 	Settings struct {
 		Key string `yaml:"Key"`
 		Pass string `yaml:"Pass"`
+		Sheet string `yaml:"Sheet"`
 	} `yaml:"settings"`
 }
 
@@ -91,10 +92,57 @@ type MapMessage struct {
 	valid       bool
 }
 
+// Status Messages
+type StatusDBM struct {
+	DailyEvents int
+	TotalEvents int
+	CommonEvent string
+	DailyDataRequests int
+}
+
+type StatusSYP struct {
+	HighestUsage int
+	MemoryLeft int
+}
+
+type StatusFH struct {
+	DailyFaults int
+	CommonFaults string
+}
+
+type StatusNAC struct {
+	DevicesActive int
+	DailyBlockedDevices int
+	DailyUnknownDevices int
+	DailyAllowedDevices int
+	TimeEscConnected string
+}
+
+type StatusEVM struct {
+	DailyImagesTaken int
+	CurrentTemperature int
+	LastMotionDetected string
+}
+
+type StatusUP struct {
+	LastAccessGranted string
+	LastAccessBlocked string
+	CurrentAlarmState string
+	LastUser string
+}
+
+const STATUSDBM string = "Status.DBM"
+const STATUSSYP string = "Status.SYP"
+const STATUSFH  string = "Status.FH"
+const STATUSNAC string = "Status.NAC"
+const STATUSUP  string = "Status.UP" 
+const STATUSALL string = "Status.*"
+//
 const FAILURECOMPONENT string = "Failure.Component"
 const MOTIONDETECTED string = "Motion.Detected"
 const MOTIONRESPONSE string = "Motion.Response"
 const EVENTEVM string = "Event.EVM"
+//
 const EXCHANGENAME string = "topics"
 const EXCHANGETYPE string = "topic"
 const TIMEFORMAT string = "2006/01/02 15:04:05"
@@ -111,3 +159,4 @@ const FAILUREPUBLISH string = "Failed to publish"
 
 var SubscribedMessagesMap map[uint32]*MapMessage
 var key_id uint32 = 0
+var device_id uint32 = 0
