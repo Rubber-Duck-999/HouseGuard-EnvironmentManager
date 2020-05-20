@@ -94,7 +94,7 @@ type MapMessage struct {
 
 // Status Messages
 type StatusDBM struct {
-	DailyEvents int
+	DailyEvents int 
 	TotalEvents int
 	CommonEvent string
 	DailyDataRequests int
@@ -106,16 +106,16 @@ type StatusSYP struct {
 }
 
 type StatusFH struct {
-	DailyFaults int
-	CommonFaults string
+	DailyFaults int `json:"daily_faults"`
+	CommonFaults string `json:"common_faults"`
 }
 
 type StatusNAC struct {
-	DevicesActive int
-	DailyBlockedDevices int
-	DailyUnknownDevices int
-	DailyAllowedDevices int
-	TimeEscConnected string
+	DevicesActive int `json:"devices_active"`
+	DailyBlockedDevices int `json:"blocked"`
+	DailyUnknownDevices int `json:"unknown"`
+	DailyAllowedDevices int `json:"allowed"`
+	TimeEscConnected string `json:"time"`
 }
 
 type StatusEVM struct {
