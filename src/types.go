@@ -137,6 +137,8 @@ const STATUSFH  string = "Status.FH"
 const STATUSNAC string = "Status.NAC"
 const STATUSUP  string = "Status.UP" 
 const STATUSALL string = "Status.*"
+const STATUSREQUESTUP  string = "Status.Request.UP"
+const STATUSREQUESTDBM string = "Status.Request.DBM"
 //
 const FAILURECOMPONENT string = "Failure.Component"
 const MOTIONDETECTED string = "Motion.Detected"

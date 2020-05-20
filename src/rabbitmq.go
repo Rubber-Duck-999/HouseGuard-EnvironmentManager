@@ -191,8 +191,25 @@ func Subscribe() {
 		
 		go GetWeather()
 
+		go StatusCheck()
+
 		log.Trace(" [*] Waiting for logs. To exit press CTRL+C")
 		<-forever
+	}
+}
+
+func StatusCheck() {
+	done := false
+	for {
+		now := time.Now()
+		m := now.Minute()
+		s := now.Second()
+		if m % 15 == 0 && done {
+			if s >= 0 && s<= 5 {
+				PublishStatusRequest()
+				done = true
+			}
+		}
 	}
 }
 
@@ -220,6 +237,33 @@ func checkCanSend() bool {
 		}
 	}
 	return false
+}
+
+func PublishStatusRequest() {
+	log.Debug("Publishing Status Request")
+	err := ch.Publish(
+		EXCHANGENAME,     // exchange
+		STATUSREQUESTDBM, // routing key
+		false,            // mandatory
+		false,            // immediate
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        []byte(""),
+		})
+
+	err = ch.Publish(
+		EXCHANGENAME,     // exchange
+		STATUSREQUESTUP, // routing key
+		false,            // mandatory
+		false,            // immediate
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        []byte(""),
+		})
+
+	if err != nil {
+		failOnError(err, "Failed to publish topic")
+	}	
 }
 
 
