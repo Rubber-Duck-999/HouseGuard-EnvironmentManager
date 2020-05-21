@@ -40,8 +40,9 @@ func init() {
 		DailyDataRequests: 0}
 
 	_statusSYP = StatusSYP{
-		HighestUsage: 0,
-		MemoryLeft: 0}
+		Temperature: 0.0,
+		MemoryLeft: 0,
+		HighestUsage: 0.0}
 
 	_statusFH = StatusFH{
 		DailyFaults: 0,
@@ -56,7 +57,7 @@ func init() {
 
 	_statusEVM = StatusEVM{
 		DailyImagesTaken: 0,
-		CurrentTemperature: 0,
+		CurrentTemperature: 0.0,
 		LastMotionDetected: "N/A"}
 
 	_statusUP = StatusUP{
@@ -236,6 +237,7 @@ func checkCanSend() bool {
 			} else {
 				setDate()
 				checkCanSend()
+				_statusEVM.DailyImagesTaken = 0
 			}
 		}
 	}

@@ -103,7 +103,7 @@ func driveUpdateStatus() {
 		// Status SYP
 		writeRange = "A5"
 		var vr2 sheets.ValueRange
-		myval = []interface{}{_statusSYP.HighestUsage, _statusSYP.MemoryLeft}
+		myval = []interface{}{_statusSYP.HighestUsage, _statusSYP.MemoryLeft, _statusSYP.Temperature}
 		vr2.Values = append(vr2.Values, myval)
 
 		_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr2).ValueInputOption("RAW").Do()

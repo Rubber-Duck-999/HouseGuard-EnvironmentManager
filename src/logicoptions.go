@@ -47,7 +47,9 @@ func checkState() {
 					log.Debug("Severity of motion is high")
 					log.Warn("Motion is apparent - notifiying service!!")
 					valid := PublishMotionDetected(getTime(), message.File)
-					if message.File == "N/A" {
+					_statusEVM.LastMotionDetected = getTime()
+					if message.File != "N/A" {
+						_statusEVM.DailyImagesTaken++
 						driveAddFile(message.File)
 					}
 					if valid != "" {

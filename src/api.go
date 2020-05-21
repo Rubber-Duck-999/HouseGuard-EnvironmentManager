@@ -15,7 +15,7 @@ var weather_minute int
 
 func init() {
 	apiKey = "N/A"
-	weather_minute = 30
+	weather_minute = 10
 }
 
 func SetKeys(api_key string) {
@@ -26,22 +26,24 @@ func GetWeather() {
 	t := time.Now()
 	min := t.Minute()
 	done := false
-	if min == weather_minute && !done {
-		log.Debug("Time is in range")
-		temporary, error := ApiCallCity("Gloucester")
-		float = temporary
-		if conn != nil {
-			if error != nil {
-				log.Error("Failure to get temperature")
-				PublishEventEVM(WEATHERAPI, getTime())
-			} else {
-				current_temp = strconv.FormatFloat(temporary, 'f', 6, 64) 
-				PublishEventEVM(TEMPERATUREMESSAGE + current_temp, getTime())
+	for {
+		if min % weather_minute == 0 && !done {
+			log.Debug("Time is in range")
+			temporary, error := ApiCallCity("Gloucester")
+			if conn != nil {
+				if error != nil {
+					log.Error("Failure to get temperature")
+					PublishEventEVM(WEATHERAPI, getTime())
+				} else {
+					current_temp = strconv.FormatFloat(temporary, 'f', 6, 64) 
+					PublishEventEVM(TEMPERATUREMESSAGE + current_temp, getTime())
+					_statusEVM.CurrentTemperature = temporary
+				}
 			}
+			done = true
+		} else if min % weather_minute != 0 {
+			done = false
 		}
-		done = true
-	} else {
-		done = false
 	}
 }
 

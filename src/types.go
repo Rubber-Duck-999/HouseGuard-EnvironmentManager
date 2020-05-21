@@ -101,8 +101,9 @@ type StatusDBM struct {
 }
 
 type StatusSYP struct {
-	HighestUsage int
-	MemoryLeft int
+	Temperature float32 `json:"temperature"`
+	MemoryLeft int64 `json:"memory_left"`
+	HighestUsage float32 `json:"highest_usage"`
 }
 
 type StatusFH struct {
@@ -120,7 +121,7 @@ type StatusNAC struct {
 
 type StatusEVM struct {
 	DailyImagesTaken int
-	CurrentTemperature int
+	CurrentTemperature float64
 	LastMotionDetected string
 }
 
