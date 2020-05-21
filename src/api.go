@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"time"
 	"strconv"
 
 	log "github.com/sirupsen/logrus"
@@ -23,26 +22,15 @@ func SetKeys(api_key string) {
 }
 
 func GetWeather() {
-	t := time.Now()
-	min := t.Minute()
-	done := false
-	for {
-		if min % weather_minute == 0 && !done {
-			log.Debug("Time is in range")
-			temporary, error := ApiCallCity("Gloucester")
-			if conn != nil {
-				if error != nil {
-					log.Error("Failure to get temperature")
-					PublishEventEVM(WEATHERAPI, getTime())
-				} else {
-					current_temp = strconv.FormatFloat(temporary, 'f', 6, 64) 
-					PublishEventEVM(TEMPERATUREMESSAGE + current_temp, getTime())
-					_statusEVM.CurrentTemperature = temporary
-				}
-			}
-			done = true
-		} else if min % weather_minute != 0 {
-			done = false
+	temporary, error := ApiCallCity("Gloucester")
+	if conn != nil {
+		if error != nil {
+			log.Error("Failure to get temperature")
+			PublishEventEVM(WEATHERAPI, getTime())
+		} else {
+			current_temp = strconv.FormatFloat(temporary, 'f', 6, 64) 
+			PublishEventEVM(TEMPERATUREMESSAGE + current_temp, getTime())
+			_statusEVM.CurrentTemperature = temporary
 		}
 	}
 }

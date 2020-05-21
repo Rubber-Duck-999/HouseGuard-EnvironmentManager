@@ -193,8 +193,6 @@ func Subscribe() {
 			//This function is checked after to see if multiple errors occur then to
 			//through an event message
 		}()
-		
-		go GetWeather()
 
 		go StatusCheck()
 
@@ -206,15 +204,16 @@ func Subscribe() {
 func StatusCheck() {
 	done := false
 	for {
-		now := time.Now()
-		m := now.Minute()
-		if m % 4 == 0 && !done {
+		if !done {
+			GetWeather()
 			PublishStatusRequest()
 			done = true
-		} else if m % 4 != 0 {
+		} else {
 			done = false
 		}
+		time.Sleep(5 * time.Minute)
 	}
+
 }
 
 func setDate() {
