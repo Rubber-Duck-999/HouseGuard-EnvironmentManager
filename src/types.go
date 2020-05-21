@@ -80,9 +80,9 @@ type ConfigTypes struct {
 }
 
 type EventEVM struct {
-	Component string
-	Message   string
-	Time      string
+	Component string `json:"component"`
+	Message   string `json:"message"`
+	Time      string `json:"time"`
 }
 
 type MapMessage struct {
