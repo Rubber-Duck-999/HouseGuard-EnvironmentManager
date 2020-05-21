@@ -62,7 +62,7 @@ func init() {
 	_statusUP = StatusUP{
 		LastAccessGranted: "N/A",
 		LastAccessBlocked: "N/A",
-		CurrentAlarmState: "ON",
+		CurrentAlarmState: "OFF",
 		LastUser: "N/A"}
 	
 }
@@ -125,9 +125,13 @@ func Subscribe() {
 
 		setDate()
 
-		var topics = [2]string{
+		var topics = [6]string{
 			MOTIONRESPONSE,
-			STATUSALL,
+			STATUSSYP,
+			STATUSFH,
+			STATUSDBM,
+			STATUSUP,
+			STATUSNAC,
 		}
 
 		err := ch.ExchangeDeclare(
@@ -203,13 +207,10 @@ func StatusCheck() {
 	for {
 		now := time.Now()
 		m := now.Minute()
-		s := now.Second()
-		if m % 15 == 0 && !done {
-			if s >= 0 && s<= 5 {
-				PublishStatusRequest()
-				done = true
-			}
-		} else {
+		if m % 4 == 0 && !done {
+			PublishStatusRequest()
+			done = true
+		} else if m % 4 != 0 {
 			done = false
 		}
 	}

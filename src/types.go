@@ -94,10 +94,10 @@ type MapMessage struct {
 
 // Status Messages
 type StatusDBM struct {
-	DailyEvents int 
-	TotalEvents int
-	CommonEvent string
-	DailyDataRequests int
+	DailyEvents int `json:"_dailyEvents"`
+	TotalEvents int `json:"_totalEvents"`
+	CommonEvent string `json:"_commonEvent"`
+	DailyDataRequests int `json:"_dailyDataRequests"`
 }
 
 type StatusSYP struct {
@@ -125,10 +125,10 @@ type StatusEVM struct {
 }
 
 type StatusUP struct {
-	LastAccessGranted string
-	LastAccessBlocked string
-	CurrentAlarmState string
-	LastUser string
+	LastAccessGranted string `json:"_accessGranted"`
+	LastAccessBlocked string `json:"_accessblocked"`
+	CurrentAlarmState string `json:"_state"`
+	LastUser string `json:"_user"`
 }
 
 const STATUSDBM string = "Status.DBM"

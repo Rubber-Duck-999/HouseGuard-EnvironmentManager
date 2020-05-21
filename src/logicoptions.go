@@ -66,6 +66,7 @@ func checkState() {
 				log.Debug("Received a Status DBM Topic")
 				var message StatusDBM
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				log.Debug("Update is: ", message)
 				_statusDBM = message
 				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
@@ -74,6 +75,7 @@ func checkState() {
 				log.Debug("Received a Status SYP Topic")
 				var message StatusSYP
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				log.Debug("Update is: ", message)
 				_statusSYP = message
 				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
@@ -82,6 +84,7 @@ func checkState() {
 				log.Debug("Received a Status FH Topic")
 				var message StatusFH
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				log.Debug("Update is: ", message)
 				_statusFH = message
 				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
@@ -90,6 +93,7 @@ func checkState() {
 				log.Debug("Received a Status NAC Topic")
 				var message StatusNAC
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				log.Debug("Update is: ", message)
 				_statusNAC = message
 				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
@@ -98,6 +102,7 @@ func checkState() {
 				log.Debug("Received a Status UP Topic")
 				var message StatusUP
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				log.Debug("Update is: ", message)
 				_statusUP = message
 				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
