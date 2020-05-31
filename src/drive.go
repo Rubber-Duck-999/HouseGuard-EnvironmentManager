@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"hash/fnv"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -33,6 +32,7 @@ import (
 	"strings"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	drive "google.golang.org/api/drive/v2"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -78,7 +78,8 @@ func driveUpdateStatus() {
 
 	srv, err := sheets.New(client)
 	if err != nil {
-			log.Fatalf("Unable to retrieve Sheets client: %v", err)
+		log.Error("Unable to retrieve Sheets client: %v", err)
+		return
 	}
 
 	// Prints the names and majors of students in a sample spreadsheet:
@@ -93,7 +94,8 @@ func driveUpdateStatus() {
 
 	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr).ValueInputOption("RAW").Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet. %v", err)
+		log.Error("Unable to retrieve data from sheet. %v", err)
+		return
 	}
 	
 	// Status SYP
@@ -104,7 +106,8 @@ func driveUpdateStatus() {
 
 	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr2).ValueInputOption("RAW").Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet. %v", err)
+		log.Error("Unable to retrieve data from sheet. %v", err)
+		return
 	}
 	
 	// Status FH
@@ -115,7 +118,8 @@ func driveUpdateStatus() {
 
 	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr3).ValueInputOption("RAW").Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet. %v", err)
+		log.Error("Unable to retrieve data from sheet. %v", err)
+		return
 	}
 
 	// Status NAC
@@ -128,7 +132,8 @@ func driveUpdateStatus() {
 
 	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr4).ValueInputOption("RAW").Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet. %v", err)
+		log.Error("Unable to retrieve data from sheet. %v", err)
+		return
 	}
 	
 	// Status EVM 
@@ -140,7 +145,8 @@ func driveUpdateStatus() {
 
 	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr5).ValueInputOption("RAW").Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet. %v", err)
+		log.Error("Unable to retrieve data from sheet. %v", err)
+		return
 	}
 
 	// Status UP
@@ -152,12 +158,13 @@ func driveUpdateStatus() {
 
 	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr6).ValueInputOption("RAW").Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet. %v", err)
+		log.Error("Unable to retrieve data from sheet. %v", err)
+		return
 	}
 	time.Sleep(10 * time.Second)
 }
 
-func driveAddFile(file string) {
+func driveAddFile(file string) bool {
 
 	config := &oauth2.Config{
 		ClientID:     valueOrFileContents(*clientID, *clientIDFile),
@@ -176,16 +183,19 @@ func driveAddFile(file string) {
 
 	service, err := drive.New(client)
 	if err != nil {
-		log.Fatalf("Unable to create Drive service: %v", err)
+		log.Error("Unable to create Drive service: %v", err)
+		return false
 	}
 	
 	goFile, err := os.Open(file)
 	if err != nil {
-		log.Fatalf("error opening %q: %v", file, err)
+		log.Error("Error opening %q: %v", file, err)
+		return false
 	}
 
 	driveFile, err := service.Files.Insert(&drive.File{Title: file}).Media(goFile).Do()
-	log.Printf("Got drive.File, err: %#v, %v", driveFile, err)
+	log.Debug("Got drive.File, err: %#v, %v", driveFile, err)
+	return true
 }
 
 var (
@@ -203,7 +213,7 @@ func osUserCacheDir() string {
 	case "linux", "freebsd":
 		return filepath.Join(os.Getenv("HOME"), ".cache")
 	}
-	log.Printf("TODO: osUserCacheDir on GOOS %q", runtime.GOOS)
+	log.Debug("TODO: osUserCacheDir on GOOS %q", runtime.GOOS)
 	return "."
 }
 
@@ -232,7 +242,7 @@ func tokenFromFile(file string) (*oauth2.Token, error) {
 func saveToken(file string, token *oauth2.Token) {
 	f, err := os.Create(file)
 	if err != nil {
-		log.Printf("Warning: failed to cache oauth token: %v", err)
+		log.Debug("Warning: failed to cache oauth token: %v", err)
 		return
 	}
 	defer f.Close()
@@ -246,7 +256,7 @@ func newOAuthClient(ctx context.Context, config *oauth2.Config) *http.Client {
 		token = tokenFromWeb(ctx, config)
 		saveToken(cacheFile, token)
 	} else {
-		log.Printf("Using cached token %#v from %q", token, cacheFile)
+		log.Debug("Using cached token %#v from %q", token, cacheFile)
 	}
 
 	return config.Client(ctx, token)
@@ -261,7 +271,7 @@ func tokenFromWeb(ctx context.Context, config *oauth2.Config) *oauth2.Token {
 			return
 		}
 		if req.FormValue("state") != randState {
-			log.Printf("State doesn't match: req = %#v", req)
+			log.Debug("State doesn't match: req = %#v", req)
 			http.Error(rw, "", 500)
 			return
 		}
@@ -271,7 +281,7 @@ func tokenFromWeb(ctx context.Context, config *oauth2.Config) *oauth2.Token {
 			ch <- code
 			return
 		}
-		log.Printf("no code")
+		log.Debug("no code")
 		http.Error(rw, "", 500)
 	}))
 	defer ts.Close()
@@ -279,9 +289,9 @@ func tokenFromWeb(ctx context.Context, config *oauth2.Config) *oauth2.Token {
 	config.RedirectURL = ts.URL
 	authURL := config.AuthCodeURL(randState)
 	go openURL(authURL)
-	log.Printf("Authorize this app at: %s", authURL)
+	log.Debug("Authorize this app at: %s", authURL)
 	code := <-ch
-	log.Printf("Got code: %s", code)
+	log.Debug("Got code: %s", code)
 
 	token, err := config.Exchange(ctx, code)
 	if err != nil {
@@ -298,7 +308,7 @@ func openURL(url string) {
 			return
 		}
 	}
-	log.Printf("Error opening URL in browser.")
+	log.Debug("Error opening URL in browser.")
 }
 
 func valueOrFileContents(value string, filename string) string {

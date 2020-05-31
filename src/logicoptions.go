@@ -25,11 +25,29 @@ func cleanUp() {
 
 	for _, file := range files {
 		if file.Mode().IsRegular() {
-			if filepath.Ext(file.Name()) == ".jpg" {
+			if filepath.Ext(file.Name()) == ".png" {
 				os.Remove(file.Name())
 				log.Warn("Deleted ", file.Name())
 			}
 		}
+	}
+}
+
+func motionResponse(message MotionResponse) {
+	log.Warn("Motion is apparent - notifiying service!!")
+	_statusEVM.LastMotionDetected = getTime()
+	if message.File != "N/A" && checkCanSend() {
+		_statusEVM.DailyImagesTaken++
+		if driveAddFile(message.File) == false {
+			newName := message.File + ".png"
+			err := os.Rename(message.File, newName)
+			if err != nil {
+				log.Error("Converting file: ", err)
+			}
+		}
+	}
+	if PublishMotionDetected(getTime(), message.File) != "" {
+		log.Warn("Failed to publish")
 	}
 }
 
@@ -43,24 +61,7 @@ func checkState() {
 				log.Debug("Received a Motion Response Topic")
 				var message MotionResponse
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
-				if checkCanSend() {
-					log.Debug("Severity of motion is high")
-					log.Warn("Motion is apparent - notifiying service!!")
-					valid := PublishMotionDetected(getTime(), message.File)
-					_statusEVM.LastMotionDetected = getTime()
-					if message.File != "N/A" {
-						_statusEVM.DailyImagesTaken++
-						driveAddFile(message.File)
-					}
-					if valid != "" {
-						log.Warn("Failed to publish")
-					} else {
-						log.Debug("Published Motion Detected Topic")
-						SubscribedMessagesMap[message_id].valid = false
-					}
-				} else {
-					log.Error("We have received too many motions today")
-				}
+				motionResponse(message)
 				SubscribedMessagesMap[message_id].valid = false
 				cleanUp()
 
