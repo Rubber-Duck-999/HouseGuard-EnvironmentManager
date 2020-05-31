@@ -164,7 +164,7 @@ func driveUpdateStatus() {
 	time.Sleep(10 * time.Second)
 }
 
-func driveAddFile(file string) bool {
+func driveAddFile(file string) {
 
 	config := &oauth2.Config{
 		ClientID:     valueOrFileContents(*clientID, *clientIDFile),
@@ -184,18 +184,18 @@ func driveAddFile(file string) bool {
 	service, err := drive.New(client)
 	if err != nil {
 		log.Error("Unable to create Drive service: %v", err)
-		return false
+		return
 	}
 	
 	goFile, err := os.Open(file)
 	if err != nil {
 		log.Error("Error opening %q: %v", file, err)
-		return false
+		return
 	}
 
 	driveFile, err := service.Files.Insert(&drive.File{Title: file}).Media(goFile).Do()
 	log.Debug("Got drive.File, err: %#v, %v", driveFile, err)
-	return true
+	return
 }
 
 var (
