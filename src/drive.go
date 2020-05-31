@@ -189,7 +189,7 @@ func driveAddFile(file string) {
 	
 	goFile, err := os.Open(file)
 	if err != nil {
-		log.Error("Error opening %q: %v", file, err)
+		log.Error("Error opening: ", file, " : ", err)
 		return
 	}
 

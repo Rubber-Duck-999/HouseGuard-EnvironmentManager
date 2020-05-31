@@ -49,7 +49,6 @@ func ApiCallCity(city string) (temp float64, err error) {
 			var message WeatherResponse
 			json.Unmarshal(data, &message)
 			log.Debug(message.Name)
-			log.Error("Temperature: ", message.Wind.Deg)
 			temp = message.Wind.Deg / 10
 		}
 	}

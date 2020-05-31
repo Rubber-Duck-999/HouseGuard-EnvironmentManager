@@ -39,7 +39,7 @@ func motionResponse(message MotionResponse) {
 	if message.File != "N/A" && checkCanSend() {
 		_statusEVM.DailyImagesTaken++
 		driveAddFile(message.File)
-		newName := message.File + ".png"
+		newName := "new.png"
 		err := os.Rename(message.File, newName)
 		if err != nil {
 			log.Error("Converting file: ", err)
