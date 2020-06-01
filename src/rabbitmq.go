@@ -321,13 +321,14 @@ func PublishFailureComponent(this_time string, this_severity int) string {
 	return failure
 }
 
-func PublishEventEVM(message string, time string) string {
+func PublishEventEVM(message string, time string, event_type_id string) string {
 	failure := ""
 
 	eventEVM, err := json.Marshal(&EventEVM{
-		Component: COMPONENT,
-		Message:   message,
-		Time:      time})
+		Component:   COMPONENT,
+		Message:     message,
+		Time:        time,
+		EventTypeId: event_type_id})
 	if err != nil {
 		failure = "Failed to convert EventEVM"
 	} else {

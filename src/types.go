@@ -83,6 +83,7 @@ type EventEVM struct {
 	Component string `json:"component"`
 	Message   string `json:"message"`
 	Time      string `json:"time"`
+	EventTypeId  string `json:"event_type_id"`
 }
 
 type MapMessage struct {
@@ -153,10 +154,10 @@ const CAMERAMONITOR string = "CM"
 const COMPONENT string = "EVM"
 const SERVERSEVERITY int = 6
 const EVENTTEMP int = 1
-const MAXMESSAGES int = 10
+const MAXMESSAGES int = 20
 const SENSORNETWORKDOWN string = "Lost connection to sensor"
 const WEATHERAPI string = "Weather api not accessible"
-const TEMPERATUREMESSAGE string = "Temperature ="
+const TEMPERATUREMESSAGE string = "Temperature = "
 const FAILURECONVERT string = "Failed to convert"
 const FAILUREPUBLISH string = "Failed to publish"
 

@@ -39,11 +39,10 @@ func motionResponse(message MotionResponse) {
 	if message.File != "N/A" && checkCanSend() {
 		_statusEVM.DailyImagesTaken++
 		driveAddFile(message.File)
-		newName := "new.png"
-		err := os.Rename(message.File, newName)
-		if err != nil {
-			log.Error("Converting file: ", err)
-		}
+	}
+	err := os.Rename(message.File, "new.png")
+	if err != nil {
+		log.Error("Converting file: ", err)
 	}
 	if PublishMotionDetected(getTime(), message.File) != "" {
 		log.Warn("Failed to publish")

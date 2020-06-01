@@ -14,7 +14,7 @@ var weather_minute int
 
 func init() {
 	apiKey = "N/A"
-	weather_minute = 10
+	weather_minute = 60
 }
 
 func SetKeys(api_key string) {
@@ -26,10 +26,10 @@ func GetWeather() {
 	if conn != nil {
 		if error != nil {
 			log.Error("Failure to get temperature")
-			PublishEventEVM(WEATHERAPI, getTime())
+			PublishEventEVM(WEATHERAPI, getTime(), "EVM2")
 		} else {
 			current_temp = strconv.FormatFloat(temporary, 'f', 6, 64) 
-			PublishEventEVM(TEMPERATUREMESSAGE + current_temp, getTime())
+			PublishEventEVM(TEMPERATUREMESSAGE + current_temp, getTime(), "EVM3")
 			_statusEVM.CurrentTemperature = temporary
 		}
 	}
