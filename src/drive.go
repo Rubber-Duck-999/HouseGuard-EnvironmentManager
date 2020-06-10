@@ -82,81 +82,23 @@ func driveUpdateStatus() {
 		return
 	}
 
-	// Prints the names and majors of students in a sample spreadsheet:
-	// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
 	spreadsheetId := _spreadsheet
-	// Status DBM
+	// Status 
 	writeRange := "A2"
 	var vr sheets.ValueRange
-	myval := []interface{}{"LIVE", _statusDBM.DailyEvents, _statusDBM.TotalEvents,
-							_statusDBM.CommonEvent, _statusDBM.DailyDataRequests}
+	myval := []interface{}{"LIVE", _statusDBM.DailyEvents, _statusDBM.TotalEvents, // DBM
+							_statusDBM.CommonEvent, _statusDBM.DailyDataRequests,  // DBM
+							_statusSYP.HighestUsage, _statusSYP.MemoryLeft, _statusSYP.Temperature, //SYP
+							_statusFH.DailyFaults, _statusFH.CommonFaults, //FH
+							_statusNAC.DevicesActive, _statusNAC.DailyBlockedDevices,
+							_statusNAC.DailyUnknownDevices, _statusNAC.DailyAllowedDevices,
+							_statusNAC.TimeEscConnected, _statusEVM.DailyImagesTaken, 
+							_statusEVM.CurrentTemperature, _statusEVM.LastMotionDetected,
+							_statusUP.LastAccessGranted, _statusUP.LastAccessBlocked,
+							_statusUP.CurrentAlarmState, _statusUP.LastUser}
 	vr.Values = append(vr.Values, myval)
 
 	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr).ValueInputOption("RAW").Do()
-	if err != nil {
-		log.Error("Unable to retrieve data from sheet. %v", err)
-		return
-	}
-	
-	// Status SYP
-	writeRange = "A5"
-	var vr2 sheets.ValueRange
-	myval = []interface{}{_statusSYP.HighestUsage, _statusSYP.MemoryLeft, _statusSYP.Temperature}
-	vr2.Values = append(vr2.Values, myval)
-
-	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr2).ValueInputOption("RAW").Do()
-	if err != nil {
-		log.Error("Unable to retrieve data from sheet. %v", err)
-		return
-	}
-	
-	// Status FH
-	writeRange = "A8"
-	var vr3 sheets.ValueRange
-	myval = []interface{}{_statusFH.DailyFaults, _statusFH.CommonFaults}
-	vr3.Values = append(vr3.Values, myval)
-
-	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr3).ValueInputOption("RAW").Do()
-	if err != nil {
-		log.Error("Unable to retrieve data from sheet. %v", err)
-		return
-	}
-
-	// Status NAC
-	writeRange = "A11"
-	var vr4 sheets.ValueRange
-	myval = []interface{}{_statusNAC.DevicesActive, _statusNAC.DailyBlockedDevices,
-							_statusNAC.DailyUnknownDevices, _statusNAC.DailyAllowedDevices,
-							_statusNAC.TimeEscConnected}
-	vr4.Values = append(vr4.Values, myval)
-
-	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr4).ValueInputOption("RAW").Do()
-	if err != nil {
-		log.Error("Unable to retrieve data from sheet. %v", err)
-		return
-	}
-	
-	// Status EVM 
-	writeRange = "A14"
-	var vr5 sheets.ValueRange
-	myval = []interface{}{_statusEVM.DailyImagesTaken, _statusEVM.CurrentTemperature,
-							_statusEVM.LastMotionDetected}
-	vr5.Values = append(vr5.Values, myval)
-
-	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr5).ValueInputOption("RAW").Do()
-	if err != nil {
-		log.Error("Unable to retrieve data from sheet. %v", err)
-		return
-	}
-
-	// Status UP
-	writeRange = "A17"
-	var vr6 sheets.ValueRange
-	myval = []interface{}{_statusUP.LastAccessGranted, _statusUP.LastAccessBlocked,
-							_statusUP.CurrentAlarmState, _statusUP.LastUser}
-	vr6.Values = append(vr6.Values, myval)
-
-	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr6).ValueInputOption("RAW").Do()
 	if err != nil {
 		log.Error("Unable to retrieve data from sheet. %v", err)
 		return
