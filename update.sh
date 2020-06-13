@@ -11,10 +11,10 @@ go build
 if [ -f exeEnvironmentManager ];
 then
     echo "EVM File found"
-    if [ -f $HOME/Documents/Temp/exeEnvironmentManager ];
+    if [ -f $HOME/Documents/Deploy/exeEnvironmentManager ];
     then
         echo "EVM old removed"
-        rm -f $HOME/Documents/Temp/exeEnvironmentManager
+        rm -f $HOME/Documents/Deploy/exeEnvironmentManager
     fi
-    mv exeEnvironmentManager $HOME/Documents/Temp/exeEnvironmentManager
+    mv exeEnvironmentManager $HOME/Documents/Deploy/exeEnvironmentManager
 fi
