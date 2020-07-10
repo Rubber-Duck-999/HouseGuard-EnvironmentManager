@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	log.SetLevel(log.DebugLevel)
+	log.SetLevel(log.ErrorLevel)
 	log.Warn("EVM - Beginning to run Environment Manager Program")
 	parser := argparse.NewParser("file", "Config file for runtime purpose")
 	// Create string flag
