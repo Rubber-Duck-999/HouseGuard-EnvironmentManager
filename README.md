@@ -1,6 +1,6 @@
 # HouseGuard-EnvironmentManager
 
-[![codebeat badge](https://codebeat.co/badges/214fa5c7-a8c3-4447-b79d-756cc0271b9f)](https://codebeat.co/projects/github-com-rubber-duck-999-houseguard-environmentmanager-master)
+![Go](https://github.com/Rubber-Duck-999/HouseGuard-EnvironmentManager/workflows/Go/badge.svg)
 
 HouseGuard-EnvironmentManager is the golang component that is part of the HouseGuard solution.
 Its main role is to communicate with the google drive api and upload motion images created by CM whilst moitoring for human sound on the audio sensor. This component is relied upon to establish outside network communication.
