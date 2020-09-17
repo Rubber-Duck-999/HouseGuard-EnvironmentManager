@@ -15,57 +15,57 @@ var init_err error
 var tempSet bool
 var current_temp string
 var float float64
-var _year int 
+var _year int
 var _month time.Month
 var _day int
 var _messages_sent int
+
 //Status
 var _statusDBM StatusDBM
 var _statusSYP StatusSYP
-var _statusFH  StatusFH 
+var _statusFH StatusFH
 var _statusNAC StatusNAC
 var _statusEVM StatusEVM
-var _statusUP  StatusUP
-//
+var _statusUP StatusUP
 
+//
 
 func init() {
 	log.Trace("Initialised rabbitmq package")
 	current_temp = "0"
 	float = 0.00
 	_statusDBM = StatusDBM{
-		DailyEvents: 0,
-		TotalEvents: 0,
-		CommonEvent: "N/A",
+		DailyEvents:       0,
+		TotalEvents:       0,
+		CommonEvent:       "N/A",
 		DailyDataRequests: 0}
 
 	_statusSYP = StatusSYP{
-		Temperature: 0.0,
-		MemoryLeft: 0,
+		Temperature:  0.0,
+		MemoryLeft:   0,
 		HighestUsage: 0.0}
 
 	_statusFH = StatusFH{
-		DailyFaults: 0,
+		DailyFaults:  0,
 		CommonFaults: "N/A"}
 
 	_statusNAC = StatusNAC{
-		DevicesActive: 0,
+		DevicesActive:       0,
 		DailyBlockedDevices: 0,
 		DailyUnknownDevices: 0,
 		DailyAllowedDevices: 0,
-		TimeEscConnected: "N/A"}
+		TimeEscConnected:    "N/A"}
 
 	_statusEVM = StatusEVM{
-		DailyImagesTaken: 0,
-		CurrentTemperature: 0.0,
+		DailyImagesTaken:   0,
 		LastMotionDetected: "N/A"}
 
 	_statusUP = StatusUP{
 		LastAccessGranted: "N/A",
 		LastAccessBlocked: "N/A",
 		CurrentAlarmState: "OFF",
-		LastUser: "N/A"}
-	
+		LastUser:          "N/A"}
+
 }
 
 func SetPassword(pass string) {
@@ -205,7 +205,6 @@ func StatusCheck() {
 	done := false
 	for {
 		if !done {
-			GetWeather()
 			PublishStatusRequest()
 			done = true
 		} else {
@@ -256,10 +255,10 @@ func PublishStatusRequest() {
 		})
 
 	err = ch.Publish(
-		EXCHANGENAME,     // exchange
+		EXCHANGENAME,    // exchange
 		STATUSREQUESTUP, // routing key
-		false,            // mandatory
-		false,            // immediate
+		false,           // mandatory
+		false,           // immediate
 		amqp.Publishing{
 			ContentType: "application/json",
 			Body:        []byte(""),
@@ -267,9 +266,8 @@ func PublishStatusRequest() {
 
 	if err != nil {
 		failOnError(err, "Failed to publish topic")
-	}	
+	}
 }
-
 
 func PublishMotionDetected(this_time string, file string) string {
 	failure := ""
@@ -280,10 +278,10 @@ func PublishMotionDetected(this_time string, file string) string {
 	log.Debug("Publishing Motion Topic")
 	if err == nil {
 		err = ch.Publish(
-			EXCHANGENAME,     // exchange
+			EXCHANGENAME,   // exchange
 			MOTIONDETECTED, // routing key
-			false,            // mandatory
-			false,            // immediate
+			false,          // mandatory
+			false,          // immediate
 			amqp.Publishing{
 				ContentType: "application/json",
 				Body:        []byte(motionDetected),
@@ -321,12 +319,11 @@ func PublishFailureComponent(this_time string, this_severity int) string {
 	return failure
 }
 
-func PublishEventEVM(message string, time string, event_type_id string) string {
+func PublishEventEVM(time string, event_type_id string) string {
 	failure := ""
 
 	eventEVM, err := json.Marshal(&EventEVM{
 		Component:   COMPONENT,
-		Message:     message,
 		Time:        time,
 		EventTypeId: event_type_id})
 	if err != nil {

@@ -32,7 +32,6 @@ func main() {
 		os.Exit(2)
 	}
 	SetPassword(data.Settings.Pass)
-	SetKeys(data.Settings.Key)
 	SetSheet(data.Settings.Sheet)
 	driveUpdateStatus()
 	Subscribe()

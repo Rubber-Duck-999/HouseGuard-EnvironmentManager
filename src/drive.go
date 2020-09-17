@@ -33,13 +33,14 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	drive "google.golang.org/api/drive/v2"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	drive "google.golang.org/api/drive/v2"
 	"google.golang.org/api/sheets/v4"
 )
 
 var _spreadsheet string
+
 // Flags
 var (
 	clientID     = flag.String("clientid", "", "OAuth 2.0 Client ID.  If non-empty, overrides --clientid_file")
@@ -67,7 +68,7 @@ func driveUpdateStatus() {
 		Endpoint:     google.Endpoint,
 		Scopes:       []string{demoScope["drive"]},
 	}
-	
+
 	ctx := context.Background()
 	if *debug {
 		ctx = context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
@@ -83,24 +84,25 @@ func driveUpdateStatus() {
 	}
 
 	spreadsheetId := _spreadsheet
-	// Status 
+	// Status
 	writeRange := "A2"
 	var vr sheets.ValueRange
 	myval := []interface{}{"LIVE", _statusDBM.DailyEvents, _statusDBM.TotalEvents, // DBM
-							_statusDBM.CommonEvent, _statusDBM.DailyDataRequests,  // DBM
-							_statusSYP.HighestUsage, _statusSYP.MemoryLeft, _statusSYP.Temperature, //SYP
-							_statusFH.DailyFaults, _statusFH.CommonFaults, //FH
-							_statusNAC.DevicesActive, _statusNAC.DailyBlockedDevices,
-							_statusNAC.DailyUnknownDevices, _statusNAC.DailyAllowedDevices,
-							_statusNAC.TimeEscConnected, _statusEVM.DailyImagesTaken, 
-							_statusEVM.CurrentTemperature, _statusEVM.LastMotionDetected,
-							_statusUP.LastAccessGranted, _statusUP.LastAccessBlocked,
-							_statusUP.CurrentAlarmState, _statusUP.LastUser}
+		_statusDBM.CommonEvent, _statusDBM.DailyDataRequests, // DBM
+		_statusSYP.HighestUsage, _statusSYP.MemoryLeft, _statusSYP.Temperature, //SYP
+		_statusFH.DailyFaults, _statusFH.CommonFaults, //FH
+		_statusNAC.DevicesActive, _statusNAC.DailyBlockedDevices,
+		_statusNAC.DailyUnknownDevices, _statusNAC.DailyAllowedDevices,
+		_statusNAC.TimeEscConnected, _statusEVM.DailyImagesTaken,
+		_statusEVM.LastMotionDetected,
+		_statusUP.LastAccessGranted, _statusUP.LastAccessBlocked,
+		_statusUP.CurrentAlarmState, _statusUP.LastUser}
 	vr.Values = append(vr.Values, myval)
 
 	_, err = srv.Spreadsheets.Values.Update(spreadsheetId, writeRange, &vr).ValueInputOption("RAW").Do()
 	if err != nil {
 		log.Error("Unable to retrieve data from sheet. %v", err)
+		PublishEventEVM(getTime(), "EVM1")
 		return
 	}
 	time.Sleep(10 * time.Second)
@@ -114,7 +116,7 @@ func driveAddFile(file string) {
 		Endpoint:     google.Endpoint,
 		Scopes:       []string{demoScope["drive"]},
 	}
-	
+
 	ctx := context.Background()
 	if *debug {
 		ctx = context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
@@ -128,7 +130,7 @@ func driveAddFile(file string) {
 		log.Error("Unable to create Drive service: %v", err)
 		return
 	}
-	
+
 	goFile, err := os.Open(file)
 	if err != nil {
 		log.Error("Error opening: ", file, " : ", err)
