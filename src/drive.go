@@ -79,6 +79,7 @@ func driveUpdateStatus() {
 
 	srv, err := sheets.New(client)
 	if err != nil {
+		PublishEventEVM(getTime(), "EVM1")
 		log.Error("Unable to retrieve Sheets client: %v", err)
 		return
 	}
