@@ -18,9 +18,13 @@ type MotionDetected struct {
 
 type ConfigTypes struct {
 	Settings struct {
-		Key   string `yaml:"Key"`
-		Pass  string `yaml:"Pass"`
-		Sheet string `yaml:"Sheet"`
+		Key      string `yaml:"Key"`
+		Pass     string `yaml:"Pass"`
+		Sheet    string `yaml:"Sheet"`
+		Username string `yaml:"Username"`
+		Password string `yaml:"Password"`
+		ClientID string `yaml:"ClientId"`
+		Endpoint string `yaml:"Endpoint"`
 	} `yaml:"settings"`
 }
 

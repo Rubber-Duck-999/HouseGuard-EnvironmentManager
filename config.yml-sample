@@ -1,2 +1,8 @@
 settings:
   Pass: "cheese"
+  User: "code"
+  Password: "Password"
+  Username: ""
+  Password: ""
+  ClientId: ""
+  Endpoint: ""
