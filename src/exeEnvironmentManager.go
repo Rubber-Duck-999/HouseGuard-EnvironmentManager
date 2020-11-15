@@ -35,7 +35,5 @@ func main() {
 	data.Settings.ClientID,
 	data.Settings.Endpoint)*/
 	SetPassword(data.Settings.Pass)
-	SetSheet(data.Settings.Sheet)
-	driveUpdateStatus()
 	Subscribe()
 }

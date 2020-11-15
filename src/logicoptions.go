@@ -38,7 +38,7 @@ func motionResponse(message MotionResponse) {
 	_statusEVM.LastMotionDetected = getTime()
 	if message.File != "N/A" && checkCanSend() {
 		_statusEVM.DailyImagesTaken++
-		driveAddFile(message.File)
+		//driveAddFile(message.File)
 	}
 	err := os.Rename(message.File, "new.png")
 	if err != nil {
@@ -69,7 +69,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusDBM = message
-				driveUpdateStatus()
+				//driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			case SubscribedMessagesMap[message_id].routing_key == STATUSSYP:
@@ -78,7 +78,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusSYP = message
-				driveUpdateStatus()
+				//driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			case SubscribedMessagesMap[message_id].routing_key == STATUSFH:
@@ -87,7 +87,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusFH = message
-				driveUpdateStatus()
+				//driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			case SubscribedMessagesMap[message_id].routing_key == STATUSNAC:
@@ -96,7 +96,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusNAC = message
-				driveUpdateStatus()
+				//driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			case SubscribedMessagesMap[message_id].routing_key == STATUSUP:
@@ -105,7 +105,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusUP = message
-				driveUpdateStatus()
+				//driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			default:
