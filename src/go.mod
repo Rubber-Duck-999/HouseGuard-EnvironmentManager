@@ -9,7 +9,7 @@ require (
 	github.com/sirupsen/logrus v1.7.0
 	github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b
-	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43
-	google.golang.org/api v0.35.0
+	golang.org/x/oauth2 v0.0.0-20201109201403-9fd604954f58
+	google.golang.org/api v0.36.0
 	gopkg.in/yaml.v2 v2.3.0
 )
