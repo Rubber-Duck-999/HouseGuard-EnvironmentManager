@@ -36,10 +36,6 @@ func cleanUp() {
 func motionResponse(message MotionResponse) {
 	log.Warn("Motion is apparent - notifiying service!!")
 	_statusEVM.LastMotionDetected = getTime()
-	if message.File != "N/A" && checkCanSend() {
-		_statusEVM.DailyImagesTaken++
-		//driveAddFile(message.File)
-	}
 	err := os.Rename(message.File, "new.png")
 	if err != nil {
 		log.Error("Converting file: ", err)

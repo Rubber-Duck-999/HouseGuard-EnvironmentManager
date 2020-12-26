@@ -1,17 +1,18 @@
 package main
 
 import (
-	"fmt"
+	/*"fmt"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
+	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"*/
 )
 
 func ApiStatus(username string, password string, id string, url string) {
 
+	/*
 	ses, err := session.NewSession(&aws.Config{Region: aws.String("eu-west-2")})
 	if err != nil {
 		fmt.Println("Error in session creation")
@@ -39,7 +40,7 @@ func ApiStatus(username string, password string, id string, url string) {
 		//return nil, authError
 	}
 
-	fmt.Println(*authResponse.AuthenticationResult.AccessToken)
+	//fmt.Println(*authResponse.AuthenticationResult.AccessToken)
 
 	client := new(http.Client)
 	req, _ := http.NewRequest("GET", url, nil)
@@ -54,5 +55,5 @@ func ApiStatus(username string, password string, id string, url string) {
 
 	b, _ := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
-	fmt.Printf("%s\n", b)
+	fmt.Printf("%s\n", b)*/
 }

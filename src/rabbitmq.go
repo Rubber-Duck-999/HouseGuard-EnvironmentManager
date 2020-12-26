@@ -97,6 +97,9 @@ func messages(routing_key string, value string) {
 			_, valid := SubscribedMessagesMap[key_id]
 			if valid {
 				log.Debug("Key already exists, checking next field: ", key_id)
+				if key_id == 100 {
+					key_id = 0
+				}
 				key_id++
 				messages(routing_key, value)
 			} else {
@@ -212,7 +215,6 @@ func StatusCheck() {
 		}
 		time.Sleep(15 * time.Minute)
 	}
-
 }
 
 func setDate() {
@@ -222,130 +224,81 @@ func setDate() {
 
 func checkCanSend() bool {
 	year, month, day := time.Now().Date()
-	if year == _year {
-		if month == _month {
-			if day == _day {
-				if _messages_sent <= MAXMESSAGES {
-					_messages_sent++
-					return true
-				} else {
-					log.Error("Max messages sent")
-					return false
-				}
-			} else {
-				setDate()
-				checkCanSend()
-				_statusEVM.DailyImagesTaken = 0
-			}
+	if year == _year && month == _month && day == _day {
+		if _messages_sent <= MAXMESSAGES {
+			_messages_sent++
+				return true
+		} else {
+			log.Error("Max messages sent")
+			return false
 		}
+	} else {
+		setDate()
+		checkCanSend()
+		_statusEVM.DailyImagesTaken = 0
 	}
 	return false
 }
 
 func PublishStatusRequest() {
 	log.Debug("Publishing Status Request")
-	err := ch.Publish(
-		EXCHANGENAME,     // exchange
-		STATUSREQUESTDBM, // routing key
-		false,            // mandatory
-		false,            // immediate
-		amqp.Publishing{
-			ContentType: "application/json",
-			Body:        []byte(""),
-		})
-
-	err = ch.Publish(
-		EXCHANGENAME,    // exchange
-		STATUSREQUESTUP, // routing key
-		false,           // mandatory
-		false,           // immediate
-		amqp.Publishing{
-			ContentType: "application/json",
-			Body:        []byte(""),
-		})
-
-	if err != nil {
-		failOnError(err, "Failed to publish topic")
-	}
+	message, _ := json.Marshal(&MotionDetected{
+		File: "",
+		Time: ""})
+	Publish(message, STATUSREQUESTDBM)
+	Publish(message, STATUSREQUESTUP)
 }
 
 func PublishMotionDetected(this_time string, file string) string {
-	failure := ""
 	motionDetected, err := json.Marshal(&MotionDetected{
 		File: file,
 		Time: this_time})
-	failOnError(err, "Failed to convert MotionDetected")
-	log.Debug("Publishing Motion Topic")
-	if err == nil {
-		err = ch.Publish(
-			EXCHANGENAME,   // exchange
-			MOTIONDETECTED, // routing key
-			false,          // mandatory
-			false,          // immediate
-			amqp.Publishing{
-				ContentType: "application/json",
-				Body:        []byte(motionDetected),
-			})
-		if err != nil {
-			failOnError(err, "Failed to publish MotionDetected topic")
-			failure = FAILUREPUBLISH
-		}
+	if err != nil {
+		return "Failed to convert motion detected"
+	} else {
+		return Publish(motionDetected, MOTIONDETECTED)
 	}
-	return failure
 }
 
 func PublishFailureComponent(this_time string, this_severity int) string {
-	failure := ""
 	failureComponent, err := json.Marshal(&FailureMessage{
 		Time:     this_time,
 		Severity: this_severity})
-	failOnError(err, "Failed to convert FailureMessage")
-
-	if err == nil {
-		err = ch.Publish(
-			EXCHANGENAME,     // exchange
-			FAILURECOMPONENT, // routing key
-			false,            // mandatory
-			false,            // immediate
-			amqp.Publishing{
-				ContentType: "application/json",
-				Body:        []byte(failureComponent),
-			})
-		if err != nil {
-			failOnError(err, "Failed to publish FailureComponent topic")
-			failure = FAILURECOMPONENT
-		}
+	if err != nil {
+		return "Failed to convert EventEVM"
+	} else {
+		return Publish(failureComponent, FAILURECOMPONENT)
 	}
-	return failure
 }
 
 func PublishEventEVM(time string, event_type_id string) string {
-	failure := ""
-
 	eventEVM, err := json.Marshal(&EventEVM{
 		Component:   COMPONENT,
 		Time:        time,
 		EventTypeId: event_type_id})
 	if err != nil {
-		failure = "Failed to convert EventEVM"
+		return "Failed to convert EventEVM"
 	} else {
-		if init_err == nil {
-			log.Debug(string(eventEVM))
-			err = ch.Publish(
-				EXCHANGENAME, // exchange
-				EVENTEVM,     // routing key
-				false,        // mandatory
-				false,        // immediate
-				amqp.Publishing{
-					ContentType: "application/json",
-					Body:        []byte(eventEVM),
-				})
-			if err != nil {
-				log.Fatal(err)
-				failure = FAILUREPUBLISH
-			}
+		return Publish(eventEVM, EVENTEVM)
+	}
+}
+
+func Publish(message []byte, routingKey string) string {
+	if init_err == nil {
+		log.Debug(string(message))
+		err := ch.Publish(
+			EXCHANGENAME, // exchange
+			routingKey,   // routing key
+			false,        // mandatory
+			false,        // immediate
+			amqp.Publishing{
+				ContentType: "application/json",
+				Body:        []byte(message),
+			})
+		if err != nil {
+			log.Fatal(err)
+			return FAILUREPUBLISH
 		}
 	}
-	log.Warn(failure)
-	return failure
+	return ""
 }

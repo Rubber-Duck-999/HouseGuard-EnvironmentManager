@@ -31,9 +31,10 @@ func main() {
 		log.Error("File doesn't exist")
 		os.Exit(2)
 	}
-	/*ApiStatus(data.Settings.Username, data.Settings.Password,
+
+	ApiStatus(data.Settings.Username, data.Settings.Password,
 	data.Settings.ClientID,
-	data.Settings.Endpoint)*/
+	data.Settings.Endpoint)
 	SetPassword(data.Settings.Pass)
 	Subscribe()
 }
