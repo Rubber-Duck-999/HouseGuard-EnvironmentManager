@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/akamensky/argparse v1.2.2
 	github.com/aws/aws-sdk-go v1.36.19
-	github.com/clarketm/json v1.14.4
+	github.com/clarketm/json v1.15.0
 	github.com/sirupsen/logrus v1.7.0
 	github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b
