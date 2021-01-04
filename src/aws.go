@@ -1,16 +1,18 @@
 package main
 
 import (
-	/*"fmt"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
+	/*"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"*/
 )
 
-func ApiStatus(username string, password string, id string, url string) {
+func ApiStatus(username string, password string, id string, endpoint string) {
 
 	/*
 	ses, err := session.NewSession(&aws.Config{Region: aws.String("eu-west-2")})
@@ -41,19 +43,24 @@ func ApiStatus(username string, password string, id string, url string) {
 	}
 
 	//fmt.Println(*authResponse.AuthenticationResult.AccessToken)
+	*/
 
-	client := new(http.Client)
-	req, _ := http.NewRequest("GET", url, nil)
+	client := http.Client{}
 
-	q := req.URL.Query()
-	q.Add("status_request", "")
-	req.URL.RawQuery = q.Encode()
+	q := url.Values{}
+	q.Add("user", "User")
+	q.Add("state", "OFF")
+	req, _ := http.NewRequest("POST", endpoint+"/alarmEvent", strings.NewReader(q.Encode()))
 
-	req.Header.Set("Authorization", *authResponse.AuthenticationResult.AccessToken)
-
-	resp, _ := client.Do(req)
-
-	b, _ := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
-	fmt.Printf("%s\n", b)*/
+	resp, err := client.Do(req)
+	if err != nil {
+	   fmt.Printf("%s", err)
+	}
+	fmt.Println(resp.Header)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+	   fmt.Printf("%s", err)
+	}
+	fmt.Println(string(body))
 }

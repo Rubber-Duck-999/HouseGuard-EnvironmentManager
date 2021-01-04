@@ -35,6 +35,6 @@ func main() {
 	ApiStatus(data.Settings.Username, data.Settings.Password,
 	data.Settings.ClientID,
 	data.Settings.Endpoint)
-	SetPassword(data.Settings.Pass)
-	Subscribe()
+	//SetPassword(data.Settings.Pass)
+	//Subscribe()
 }

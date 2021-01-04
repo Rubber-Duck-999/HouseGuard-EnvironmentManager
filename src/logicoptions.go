@@ -25,7 +25,7 @@ func cleanUp() {
 
 	for _, file := range files {
 		if file.Mode().IsRegular() {
-			if filepath.Ext(file.Name()) == ".png" {
+			if filepath.Ext(file.Name()) == ".jpg" {
 				os.Remove(file.Name())
 				log.Warn("Deleted ", file.Name())
 			}
