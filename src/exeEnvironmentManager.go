@@ -32,9 +32,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	ApiStatus(data.Settings.Username, data.Settings.Password,
-	data.Settings.ClientID,
-	data.Settings.Endpoint)
+	setEndpoint(data.Settings.Endpoint)
 	//SetPassword(data.Settings.Pass)
 	//Subscribe()
 }

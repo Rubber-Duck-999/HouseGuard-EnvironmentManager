@@ -1,66 +1,115 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
+	"strconv"
+	"time"
 
-	/*"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"*/
+	log "github.com/sirupsen/logrus"
 )
 
-func ApiStatus(username string, password string, id string, endpoint string) {
+var _endpoint string
 
-	/*
-	ses, err := session.NewSession(&aws.Config{Region: aws.String("eu-west-2")})
-	if err != nil {
-		fmt.Println("Error in session creation")
-	}
+func setEndpoint(endpoint string) {
+	_endpoint = endpoint
+}
 
-	client_id := aws.String(id)
-
-	_username := aws.String(username)
-	_password := aws.String(password)
-
-	params := &cognitoidentityprovider.InitiateAuthInput{
-		AuthFlow: aws.String("USER_PASSWORD_AUTH"),
-		AuthParameters: map[string]*string{
-			"USERNAME": _username,
-			"PASSWORD": _password,
-		},
-		ClientId: client_id,
-	}
-	cip := cognitoidentityprovider.New(ses)
-
-	authResponse, authError := cip.InitiateAuth(params)
-	if authError != nil {
-
-		fmt.Println("Error = ", authError)
-		//return nil, authError
-	}
-
-	//fmt.Println(*authResponse.AuthenticationResult.AccessToken)
-	*/
-
+func apiCall(req *http.Request) bool {
+	call_allowed := false
 	client := http.Client{}
+	if call_allowed {
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Warn("Error updating server")
+		}
+		defer resp.Body.Close()
+		_, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Warn("Body reading error")
+		}
+		return true
+	}
+	return false
+}
 
+func driveUpdateStatus() {
+	t := time.Now()
+ 
+	h := t.Hour()
+	m := t.Minute()
+	s := t.Second()
+	if h == 2 && m == 0 {
+		if s == 0 && s < 5 {
+			log.Debug("Posting daily status")
+			postDailyStatus()
+		}
+	}
+	if m == 1 {
+		log.Debug("Posting status")
+		postStatus()
+		time.Sleep(2 * time.Minute)
+	}
+}
+
+func postAlarmEvent(event AlarmEvent) {
 	q := url.Values{}
 	q.Add("user", "User")
 	q.Add("state", "OFF")
-	req, _ := http.NewRequest("POST", endpoint+"/alarmEvent", strings.NewReader(q.Encode()))
+	req, _ := http.NewRequest("POST", _endpoint+"/alarmEvent", strings.NewReader(q.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
+	if apiCall(req) {
+		log.Debug("Request Successful")
+	} else {
+		log.Error("Request Failed on POST AlarmEvent")
+		time_string := time.Now().String()
+		PublishFailureComponent(time_string, 3)
+	}
+}
 
-	resp, err := client.Do(req)
-	if err != nil {
-	   fmt.Printf("%s", err)
+func postStatus() {
+	q := url.Values{}
+	t := time.Now()
+	q.Add("created_date", t.Format("2006-01-02"))
+	q.Add("motion_detected", _statusEVM.LastMotionDetected)
+	q.Add("access_granted", _statusUP.LastAccessGranted)
+	q.Add("access_denied", _statusUP.LastAccessBlocked)
+	q.Add("last_fault", "N/A")
+	q.Add("last_user", _statusUP.LastUser)
+	q.Add("cpu_temp", strconv.Itoa(_statusSYP.Temperature))
+	q.Add("cpu_usage", strconv.Itoa(_statusSYP.HighestUsage))
+	q.Add("memory", strconv.Itoa(_statusSYP.MemoryLeft))
+	req, _ := http.NewRequest("POST", _endpoint+"/status", strings.NewReader(q.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
+	if apiCall(req) {
+		log.Debug("Request Successful")
+	} else {
+		log.Error("Request Failed on POST Status")
+		time_string := time.Now().String()
+		PublishFailureComponent(time_string, 3)
 	}
-	fmt.Println(resp.Header)
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-	   fmt.Printf("%s", err)
+}
+
+func postDailyStatus() {
+	q := url.Values{}
+	t := time.Now()
+	q.Add("created_date", t.Format("2006-01-02"))
+	q.Add("allowed", strconv.Itoa(_statusNAC.DailyAllowedDevices))
+	q.Add("blocked", strconv.Itoa(_statusNAC.DailyBlockedDevices))
+	q.Add("unknown", strconv.Itoa(_statusNAC.DailyUnknownDevices))
+	q.Add("total_events", strconv.Itoa(_statusDBM.TotalEvents))
+	q.Add("common_event", _statusDBM.CommonEvent)
+	q.Add("total_faults", strconv.Itoa(_statusFH.DailyFaults))
+	q.Add("common_fault", _statusFH.CommonFaults)
+	req, _ := http.NewRequest("POST", _endpoint+"/dailyStatus", strings.NewReader(q.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
+	if apiCall(req) {
+		log.Debug("Request Successful")
+	} else {
+		log.Error("Request Failed on POST DailyStatus")
+		time_string := time.Now().String()
+		PublishFailureComponent(time_string, 3)
 	}
-	fmt.Println(string(body))
 }

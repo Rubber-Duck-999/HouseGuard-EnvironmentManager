@@ -41,6 +41,37 @@ type MapMessage struct {
 	valid       bool
 }
 
+// Alarm Event
+type AlarmEvent struct {
+	User   string `json:"user"`
+	State  string `json:"state"`
+}
+
+// Daily Status
+type DailyStatus struct {
+	CreatedDate string
+	Allowed     int
+	Blocked     int
+	Unknown     int
+	TotalEvents int
+	CommonEvent string
+	TotalFaults int
+	CommonFault string
+}
+
+// Status
+type Status struct {
+	CreatedDate    string
+	MotionDetected string
+	AccessGranted  string
+	AccessDenied   string
+	LastFault      string
+	LastUser       string
+	CPUTemp        int
+	CPUUsage       int
+	Memory         int
+}
+
 // Status Messages
 type StatusDBM struct {
 	DailyEvents       int    `json:"_dailyEvents"`
@@ -50,9 +81,9 @@ type StatusDBM struct {
 }
 
 type StatusSYP struct {
-	Temperature  float32 `json:"temperature"`
-	MemoryLeft   int64   `json:"memory_left"`
-	HighestUsage float32 `json:"highest_usage"`
+	Temperature  int `json:"temperature"`
+	MemoryLeft   int `json:"memory_left"`
+	HighestUsage int `json:"highest_usage"`
 }
 
 type StatusFH struct {
@@ -94,7 +125,7 @@ const FAILURECOMPONENT string = "Failure.Component"
 const MOTIONDETECTED string = "Motion.Detected"
 const MOTIONRESPONSE string = "Motion.Response"
 const EVENTEVM string = "Event.EVM"
-
+const ALARMEVENT string = "Alarm.Event"
 //
 const EXCHANGENAME string = "topics"
 const EXCHANGETYPE string = "topic"

@@ -51,6 +51,13 @@ func checkState() {
 			log.Trace("Message id is: ", message_id)
 			log.Trace("Message routing key is: ", SubscribedMessagesMap[message_id].routing_key)
 			switch {
+			case SubscribedMessagesMap[message_id].routing_key == ALARMEVENT:
+				log.Debug("Received a Alarm Event Topic")
+				var message AlarmEvent
+				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
+				postAlarmEvent(message)
+				SubscribedMessagesMap[message_id].valid = false
+
 			case SubscribedMessagesMap[message_id].routing_key == MOTIONRESPONSE:
 				log.Debug("Received a Motion Response Topic")
 				var message MotionResponse
@@ -65,7 +72,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusDBM = message
-				//driveUpdateStatus()
+				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			case SubscribedMessagesMap[message_id].routing_key == STATUSSYP:
@@ -74,7 +81,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusSYP = message
-				//driveUpdateStatus()
+				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			case SubscribedMessagesMap[message_id].routing_key == STATUSFH:
@@ -83,7 +90,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusFH = message
-				//driveUpdateStatus()
+				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			case SubscribedMessagesMap[message_id].routing_key == STATUSNAC:
@@ -92,7 +99,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusNAC = message
-				//driveUpdateStatus()
+				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			case SubscribedMessagesMap[message_id].routing_key == STATUSUP:
@@ -101,7 +108,7 @@ func checkState() {
 				json.Unmarshal([]byte(SubscribedMessagesMap[message_id].message), &message)
 				log.Debug("Update is: ", message)
 				_statusUP = message
-				//driveUpdateStatus()
+				driveUpdateStatus()
 				SubscribedMessagesMap[message_id].valid = false
 
 			default:

@@ -41,9 +41,9 @@ func init() {
 		DailyDataRequests: 0}
 
 	_statusSYP = StatusSYP{
-		Temperature:  0.0,
+		Temperature:  0,
 		MemoryLeft:   0,
-		HighestUsage: 0.0}
+		HighestUsage: 0}
 
 	_statusFH = StatusFH{
 		DailyFaults:  0,
@@ -129,13 +129,14 @@ func Subscribe() {
 
 		setDate()
 
-		var topics = [6]string{
+		var topics = [7]string{
 			MOTIONRESPONSE,
 			STATUSSYP,
 			STATUSFH,
 			STATUSDBM,
 			STATUSUP,
 			STATUSNAC,
+			ALARMEVENT,
 		}
 
 		err := ch.ExchangeDeclare(
