@@ -18,7 +18,7 @@ func setEndpoint(endpoint string) {
 }
 
 func apiCall(req *http.Request) bool {
-	call_allowed := false
+	call_allowed := true
 	client := http.Client{}
 	if call_allowed {
 		resp, err := client.Do(req)
