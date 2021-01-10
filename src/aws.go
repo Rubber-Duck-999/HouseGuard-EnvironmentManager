@@ -65,7 +65,7 @@ func postAlarmEvent(event AlarmEvent) {
 	} else {
 		log.Error("Request Failed on POST AlarmEvent")
 		time_string := time.Now().String()
-		PublishFailureComponent(time_string, 3)
+		PublishFailureComponent(time_string)
 	}
 }
 
@@ -88,7 +88,7 @@ func postStatus() {
 	} else {
 		log.Error("Request Failed on POST Status")
 		time_string := time.Now().String()
-		PublishFailureComponent(time_string, 3)
+		PublishFailureComponent(time_string)
 	}
 }
 
@@ -110,6 +110,6 @@ func postDailyStatus() {
 	} else {
 		log.Error("Request Failed on POST DailyStatus")
 		time_string := time.Now().String()
-		PublishFailureComponent(time_string, 3)
+		PublishFailureComponent(time_string)
 	}
 }

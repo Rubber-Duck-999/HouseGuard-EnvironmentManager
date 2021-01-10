@@ -2,7 +2,6 @@ package main
 
 type FailureMessage struct {
 	Time     string `json:"time"`
-	Severity int    `json:"severity"`
 }
 
 type MotionResponse struct {
@@ -26,12 +25,6 @@ type ConfigTypes struct {
 		ClientID string `yaml:"ClientId"`
 		Endpoint string `yaml:"Endpoint"`
 	} `yaml:"settings"`
-}
-
-type EventEVM struct {
-	Component   string `json:"component"`
-	Time        string `json:"time"`
-	EventTypeId string `json:"event_type_id"`
 }
 
 type MapMessage struct {
@@ -124,7 +117,6 @@ const STATUSREQUESTDBM string = "Status.Request.DBM"
 const FAILURECOMPONENT string = "Failure.Component"
 const MOTIONDETECTED string = "Motion.Detected"
 const MOTIONRESPONSE string = "Motion.Response"
-const EVENTEVM string = "Event.EVM"
 const ALARMEVENT string = "Alarm.Event"
 //
 const EXCHANGENAME string = "topics"
@@ -132,7 +124,6 @@ const EXCHANGETYPE string = "topic"
 const TIMEFORMAT string = "2006/01/02 15:04:05"
 const CAMERAMONITOR string = "CM"
 const COMPONENT string = "EVM"
-const SERVERSEVERITY int = 6
 const MAXMESSAGES int = 100
 const FAILURECONVERT string = "Failed to convert"
 const FAILUREPUBLISH string = "Failed to publish"

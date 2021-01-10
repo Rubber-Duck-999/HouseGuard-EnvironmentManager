@@ -12,9 +12,6 @@ var conn *amqp.Connection
 var ch *amqp.Channel
 var password string
 var init_err error
-var tempSet bool
-var current_temp string
-var float float64
 var _year int
 var _month time.Month
 var _day int
@@ -32,8 +29,6 @@ var _statusUP StatusUP
 
 func init() {
 	log.Trace("Initialised rabbitmq package")
-	current_temp = "0"
-	float = 0.00
 	_statusDBM = StatusDBM{
 		DailyEvents:       0,
 		TotalEvents:       0,
@@ -261,26 +256,13 @@ func PublishMotionDetected(this_time string, file string) string {
 	}
 }
 
-func PublishFailureComponent(this_time string, this_severity int) string {
+func PublishFailureComponent(this_time string) string {
 	failureComponent, err := json.Marshal(&FailureMessage{
-		Time:     this_time,
-		Severity: this_severity})
+		Time:     this_time})
 	if err != nil {
 		return "Failed to convert EventEVM"
 	} else {
 		return Publish(failureComponent, FAILURECOMPONENT)
-	}
-}
-
-func PublishEventEVM(time string, event_type_id string) string {
-	eventEVM, err := json.Marshal(&EventEVM{
-		Component:   COMPONENT,
-		Time:        time,
-		EventTypeId: event_type_id})
-	if err != nil {
-		return "Failed to convert EventEVM"
-	} else {
-		return Publish(eventEVM, EVENTEVM)
 	}
 }
 

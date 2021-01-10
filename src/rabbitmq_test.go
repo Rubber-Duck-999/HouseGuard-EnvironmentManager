@@ -115,5 +115,5 @@ func TestFailure(t *testing.T) {
 	if err == nil {
 		t.Log("Failure")
 	}
-	PublishFailureComponent("Message", 6)
+	PublishFailureComponent("Message")
 }
